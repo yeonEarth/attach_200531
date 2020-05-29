@@ -22,6 +22,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Paint;
@@ -30,6 +31,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -114,6 +116,8 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
     LinearLayout category_add;
     TextView map_error_txt;
     TextView spot_error_txt;
+    private RelativeLayout info_message;
+    private Button info_dismiss_btn;
 
     boolean isExpand = false;
     int btn_id[] = new int[]{R.id.category_add_btn1, R.id.category_add_btn2, R.id.category_add_btn3 ,
@@ -167,6 +171,38 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
         map_error_txt = (TextView) findViewById(R.id.map_error_txt);
         spot_error_txt = (TextView) findViewById(R.id.spot_error_txt);
+
+        info_message = findViewById(R.id.info_message2);
+        info_dismiss_btn = findViewById(R.id.info_dismiss_btn2);
+
+
+        //최소 실행 때 보이는 안내창-----------------------------------------------
+        SharedPreferences a = getSharedPreferences("info1", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = a.edit();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                editor.putInt("info2", 1);
+                editor.commit();
+            }
+        }, 300);
+
+        //첫 실행시 나오는 안내 말풍선
+        SharedPreferences preferences =getSharedPreferences("info1", MODE_PRIVATE);
+        int firstviewShow = preferences.getInt("info2", 0);
+
+        // 1이 아니라면 취향파악페이지 보여주기 = 처음 실행이라면
+        if (firstviewShow != 1) {
+            info_message.setVisibility(View.VISIBLE);
+        }
+
+        info_dismiss_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                info_message.setVisibility(View.INVISIBLE);
+            }
+        });
 
         //위아래로 드래그 했을 때 변화를 감지하는 부분
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -438,7 +474,7 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
                     arrow_btn.requestLayout();
 
                     //맵 중심을 리셋
-                    mapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(y, x), 8, true);
+                    //mapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(y, x), 8, true);
                 }
             }
         });
@@ -619,7 +655,7 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
     public void onData(ArrayList<Page2_X_CategoryBottom.Category_item> list) {
 
         //카테고리 선택되면 기존 것들 싹 삭제해줌
-        category_add.removeAllViews();
+
         appBarLayout.getLayoutParams().height = (int)(483*d);
         appBarLayout.requestLayout();
 
@@ -636,20 +672,8 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
         button.setText(name);
         button.setLayoutParams(params);
         button.setId(R.id.category_add_btn1);
-        //button.setOnClickListener(this);
         button.setBackgroundResource(R.drawable.box_round_category_add);
-        category_add.addView(button);
 
-        //아래는 나중에
-//        for(int i =0; i < list.size(); i++){
-//            btn[i] = new Button(this);
-//            btn[i].setText(list.get(i).name);
-//            btn[i].setLayoutParams(params);
-//            btn[i].setId(btn_id[i]);
-//            btn[i].setBackgroundResource(R.drawable.box_round_category_add);
-//            btn[i].setOnClickListener(this);
-//            category_add.addView(btn[i]);
-//        }
 
         //기존의 api 값을 지운다.
         items.clear();
@@ -885,6 +909,17 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
+
+
+    //맵 뷰 한개만 띄워주기
+   @Override
+    protected void onPause() {
+        super.onPause();
+        ((ViewGroup)mapView.getParent()).removeView(mapView);
+    }
+
+
+
 
     //지도 아이콘을 누르면
     @Override

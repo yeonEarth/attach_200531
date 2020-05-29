@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,8 +48,11 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
     private ItemTouchHelper touchHelper;
     private ArrayList<Page3_1_1_1_Main.RecycleItem> items = null;
 
+    private ForProgress forProgress;
+
     //헤더바 위치가 0이면 true로 바뀌고 1일차로 움직일 수 없게 만듦
     boolean firstdone = false;
+    private ArrayList<Integer> headerPosition = new ArrayList<>();
 
     //헤더인지 아이템인지 확인하는데 필요함/ HEADER:n일차 바 / CHILD:기차시간표 / CITY:관광지 부분
     public static final int HEADER = 0;
@@ -72,10 +76,11 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
     //부모 액티비티와 연결
-    Page3_1_1_1_trainAdapter(ArrayList<Page3_1_1_1_Main.RecycleItem> list, FragmentManager supportFragmentManager, int isNetworkConnect) {
+    Page3_1_1_1_trainAdapter(ArrayList<Page3_1_1_1_Main.RecycleItem> list, FragmentManager supportFragmentManager, int isNetworkConnect, ForProgress forProgress) {
         items = list;
         this.fragmentManager = supportFragmentManager;
         this.isNetworkConnect = isNetworkConnect;
+        this.forProgress = forProgress;
     }
 
 
@@ -132,6 +137,8 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
                     return false;
                 }
             });
+
+            headerPosition.add(position);
         }
 
 
@@ -204,12 +211,21 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onItemMove(int fromPos, int toPos) {
         //0번째=1일차로는 움직일 수 없음
         if(toPos != 0 ){
+            forProgress.settingProgress(true);
             Page3_1_1_1_Main.RecycleItem target = items.get(fromPos);
             items.remove(fromPos);
             items.add(toPos, target);
             notifyItemMoved(fromPos, toPos);
-            notifyItemChanged(fromPos);
-            notifyItemChanged(toPos);
+
+            //움직지면 0.3초 후에 헤더바가 고정되고 변경된 위치가 업뎃 됨
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                    forProgress.settingProgress(false);
+                }
+            }, 300);
         }
 
     }
@@ -235,7 +251,7 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
         public HeaderViewHolder(View itemView) {
             super(itemView);
             header_title = (TextView) itemView.findViewById(R.id.header_title);
-            move_btn = (TextView) itemView.findViewById(R.id.move_btn);
+            move_btn = itemView.findViewById(R.id.move_btn);
             list_header = (LinearLayout) itemView.findViewById(R.id.list_header);
             move_img = (ImageView)itemView.findViewById(R.id.move_btn_img);
         }
@@ -246,7 +262,7 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView mTimeText, mCourseText1, mCourseText2, mShadowText; // 시간, 경로
         private ImageView search_img;
-        LinearLayout item_touch;
+        private ImageView item_touch;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -255,15 +271,15 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
             mShadowText = (TextView) itemView.findViewById(R.id.searchTime_Page3_1_1_shadow);
             mTimeText = (TextView) itemView.findViewById(R.id.searchTime_Page3_1_1);
             search_img = (ImageView) itemView.findViewById(R.id.search_img);
-            item_touch = (LinearLayout) itemView.findViewById(R.id.item_touch);
-
+            item_touch =  itemView.findViewById(R.id.item_touch);
 
             //기차 시간표 부분------------------------------------------------여기 아래 수정함
-            //page3_1_1_1_bottomSheet_Adapter 자바 파일도 수정함
-            //page3_1_1_1_apisheet.xml 에 textview 추가 하시길
-            itemView.setOnClickListener(new View.OnClickListener() {
+            item_touch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    item_touch.setClickable(false);
+
                     //현재 위치를 받아오기 위함
                     final Context context = v.getContext();
                     final int pos = getAdapterPosition() ;
@@ -276,7 +292,7 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
                     String date = items.get(pos).date;
 
                     //바텀시트 생성
-                    final BottomSheetDialog dialog = new BottomSheetDialog(context);
+                    final BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.AppBottomSheetDialogTheme);
                     LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View view = inflater.inflate(R.layout.page3_1_1_1_apisheet, null);
                     dialog.setContentView(view);
@@ -311,13 +327,6 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
                     } else
                         error_msg.setVisibility(View.INVISIBLE);
 
-
-                    //api 트래픽 다 써서 임의값 넣어놓음
-//                    completeList.add(new Page3_1_1_1_bottomSheet_Adapter.Api_Item(Page3_1_1_1_bottomSheet_Adapter.HEADER, "00:04"+"00:35","00:24"+"02:07", " ", "무궁화"+"ITX-새마을"));
-//                    completeList.add(new Page3_1_1_1_bottomSheet_Adapter.Api_Item(Page3_1_1_1_bottomSheet_Adapter.HEADER, "09:48"+"10:46","10:08"+"12:07", " ", "무궁화"+"ITX-새마을"));
-//                    completeList.add(new Page3_1_1_1_bottomSheet_Adapter.Api_Item(Page3_1_1_1_bottomSheet_Adapter.HEADER, "10:44"+"11:19","11:07"+"12:33", " ", "무궁화"+"ITX-새마을"));
-//                    completeList.add(new Page3_1_1_1_bottomSheet_Adapter.Api_Item(Page3_1_1_1_bottomSheet_Adapter.HEADER, "16:41"+"17:22","17:01"+"18:57", " ", "새마을"+"무궁화"));
-//                    completeList.add(new Page3_1_1_1_bottomSheet_Adapter.Api_Item(Page3_1_1_1_bottomSheet_Adapter.HEADER, "17:46"+"18:27","18:08"+"20:01", " ", "무궁화"+"무궁화"));
 
                     //바텀시트 어댑터 연결
                     Page3_1_1_1_bottomSheet_Adapter adapter = new Page3_1_1_1_bottomSheet_Adapter(completeList, context);
@@ -359,6 +368,14 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
                     });
 
                     dialog.show();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            item_touch.setClickable(true);
+                        }
+                    }, 300); //0.3초 뒤 클릭 가능
                 }
             });
         }
@@ -383,7 +400,6 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
 
     /*
      *바텀시트 관련 함수
-     *****************************************************************************************
      */
 
     //txt 돌려 역 비교할 배열 만들기(이름 지역코드 동네코드)<-로 구성
@@ -432,6 +448,12 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
         private String str;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            forProgress.settingProgress(true);
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             URL url = null;
             try{
@@ -465,6 +487,12 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
                 e.printStackTrace();
             }
             return receiveMsg;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            forProgress.settingProgress(false);
         }
     }
 
@@ -537,7 +565,9 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-
+    public interface ForProgress{
+        void settingProgress(boolean run);
+    }
 
 
 }

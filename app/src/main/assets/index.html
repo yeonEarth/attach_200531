@@ -83,6 +83,9 @@ function on_click(evt)
 
 	pin_start.setAttribute("value", "1_"+name );
 	pin_end.setAttribute("value", "3_"+name );
+
+
+	android2.send('ok');
 }
 
 
@@ -162,7 +165,7 @@ function on_click2_2(evt)
 
 
 //자동입력에서 역을 입력하면, name을 배열로 해당 역을 찾아낸다.
-function setMessage(arg)
+function setMessage(arg, position)
 {
 		//변수 array_station 는 문서 객체를 가지는 배열로 들어 간다.
 		var array_station = document.getElementsByName("station");
@@ -171,9 +174,94 @@ function setMessage(arg)
         	if(arg == array_station[i].getAttribute('value')){
 
         		//자동입력을 위한 function은 on_click3에 구현해놈
+        		if(position == 0) {
         		on_click3(array_station[i].getAttribute('id'));
+        		break;
+        		}
+
+				//출발역일때
+        		else if(position == 1) {
+				on_startStation(array_station[i].getAttribute('id'));
+					break;
+        		}
+
+        		//경유역일때
+        		else if(position == 2) {
+				on_middleStation(array_station[i].getAttribute('id'));
+					break;
+        		}
+
+        		//도착역일때
+        		else if(position == 3) {
+				on_endStation(array_station[i].getAttribute('id'));
+					break;
+        		}
         	}
         }
+}
+
+//스케쥴 추가 눌러서 오는 역(출발)
+function on_startStation(evt)
+{
+	//변수 연결
+	var btn = document.getElementById( evt );
+
+	//눌린 버튼의 x,y 좌표를 받음
+	var x = btn.getAttribute('cx');
+	var y = btn.getAttribute('cy');
+
+	var pin_start = document.getElementById( 'pin_start' );
+    pin_start.setAttribute('opacity' , 100 );
+	pin_start.setAttribute('cx' ,x);
+	pin_start.setAttribute('cy' , y );
+}
+
+
+//스케쥴 추가 눌러서 오는 역(도착)
+function on_endStation(evt)
+{
+	//변수 연결
+	var btn = document.getElementById( evt );
+
+	//눌린 버튼의 x,y 좌표를 받음
+	var x = btn.getAttribute('cx');
+	var y = btn.getAttribute('cy');
+
+	var pin_end = document.getElementById( 'pin_end' );
+	pin_end.setAttribute('opacity' , 100 );
+	pin_end.setAttribute('cx' , x  );
+	pin_end.setAttribute('cy' , y );
+
+}
+
+//스케쥴 추가 눌러서 오는 역(경유)
+function on_middleStation(evt)
+{
+	//변수 연결
+	var btn = document.getElementById( evt );
+
+	//눌린 버튼의 x,y 좌표를 받음
+	var x = btn.getAttribute('cx');
+	var y = btn.getAttribute('cy');
+	var name = btn.getAttribute('value');
+
+	//pin을 지정하는 과정
+	  var array_pin = document.getElementsByName("pin_middle");
+	  for(var i=0; i<array_pin.length;i++){
+	  		//경유핀셋의 디폴트 value 값이 'pin_경유'임
+        	if(array_pin[i].getAttribute('value')=="pin_경유"){
+			  var pin_middle = document.getElementById( array_pin[i].getAttribute('id'));
+			  break;
+        	}
+        }
+
+	//경유역의 value 값을 복사하여 경유핀셋에 넣는다.
+	pin_middle.setAttribute("value", "2_"+name );
+
+	//경유 핀셋을 보이도록 함
+	 pin_middle.setAttribute('opacity', 100 );
+	 pin_middle.setAttribute('cx', x );
+	 pin_middle.setAttribute('cy', y );
 }
 
 
@@ -322,26 +410,6 @@ function destroy(x,y)
 }
 
 
-
-//태그뷰에서 삭제하면 지도에서도 삭제한다.(출발)
-function deletePin_start()
-{
-	var pin = document.getElementById('pin_start');
-	pin.setAttribute('cx' , 0);
-	pin.setAttribute('cy' , 0);
-	pin.setAttribute('opacity' , 0);
-}
-
-
-
-//태그뷰에서 삭제하면 지도에서도 삭제한다.(도착)
-function deletePin_end()
-{
-	var pin = document.getElementById('pin_end');
-	pin.setAttribute('cx' , 0);
-	pin.setAttribute('cy' , 0);
-	pin.setAttribute('opacity' , 0);
-}
 
 
 

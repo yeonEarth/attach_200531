@@ -60,12 +60,16 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="33dp"
-            android:layout_marginTop="16dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="33dp"
+                android:layout_marginTop="16dp">
 
             // 여행일정입력 타이틀
             <TextView
@@ -78,7 +82,10 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:letterSpacing="-0.03" />
+                android:letterSpacing="-0.03"
+                android:fontFamily="@font/gothic_bold"
+                android:gravity="center"
+                android:scaleX="0.98"/>
 
             // 세부 내용 텍스트
             <TextView
@@ -92,7 +99,9 @@
                 android:text="기차 시간과 여행 일정을 쉽고 편리하게 관리하세요!"
                 android:textSize="16sp"
                 android:textColor="#000000"
-                android:letterSpacing="-0.03"/>
+                android:letterSpacing="-0.03"
+                android:fontFamily="@font/gothic_medium"
+                android:scaleX="0.98"/>
 
             //흰 박스
             <RelativeLayout
@@ -106,7 +115,7 @@
                 android:background="@drawable/box_round"
                 android:elevation="4dp">
 
-                //여기에 리사이클러뷰 들어갈 거임
+
                 <LinearLayout
                     android:id="@+id/page3.1.1_box_round"
                     android:layout_width="match_parent"
@@ -126,34 +135,101 @@
             </RelativeLayout>
 
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/box_round3"
                 android:layout_below="@+id/add_layout"
                 android:layout_marginTop="24dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
+                android:elevation="4dp">
 
                 //저장하기 버튼
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/page3_save_btn"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_weight="1"
                     android:text="완료하기"
                     android:textSize="16dp"
                     android:textColor="#ffffff"
-                    android:fontFamily="@font/notosans_semibold"
                     android:background="@drawable/box_round3"
-                    android:elevation="8dp" />
+                    android:fontFamily="@font/gothic_medium" />
+            </FrameLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
 
+                //안내메시지1
+                <RelativeLayout
+                    android:id="@+id/info_message4"
+                    android:layout_width="226dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_message_right"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:layout_width="187dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="11dp"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/message4"
+                        android:textAppearance="@style/info_message"/>
+
+                    <Button
+                        android:id="@+id/info_dismiss_btn4"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        android:background="#00000000"/>
+
+                </RelativeLayout>
+
+
+                //안내 메시지2
+                <RelativeLayout
+                    android:id="@+id/info_message5"
+                    android:layout_width="226dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="80dp"
+                    android:layout_alignBottom="@+id/main_layout"
+                    android:background="@drawable/ic_message_left"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:layout_width="187dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="11dp"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/message5"
+                        android:textAppearance="@style/info_message"/>
+
+                    <Button
+                        android:id="@+id/info_dismiss_btn5"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        android:background="#00000000"/>
+
+                </RelativeLayout>
         </RelativeLayout>
 
+
         </androidx.core.widget.NestedScrollView>
+
+        <ProgressBar
+            android:id="@+id/page3_1_1_1_progress"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            android:background="@drawable/progress_circle"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <RelativeLayout

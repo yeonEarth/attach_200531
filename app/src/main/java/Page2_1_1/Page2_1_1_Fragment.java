@@ -10,11 +10,14 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.hansol.spot_200510_hs.R;
 
@@ -46,7 +49,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
     private String  station, subject, isMake;
     private String contentTypeId, cat1, cat2;
     private DbOpenHelper mDbOpenHelper;
-    String id;
+    private String id;
 
     //역 이름을 받아서 지역코드랑 시군구코드 받기 위한 배열
     int station_code = 49;
@@ -106,17 +109,21 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
         mDbOpenHelper.open();
         mDbOpenHelper.create();
 
+
         Button btn = v.findViewById(R.id.page2_1_fragment_more_btn);
         btn.setText("'" + station + "'의 다른 관광지 더 보기");
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 Intent intent = new Intent(getContext(), Page2_X_Main.class);
                 intent.putExtra("station", station);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
+
             }
         });
 
@@ -139,28 +146,30 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
             try {
                 String RESULT = task.execute().get();
                 Log.i("전달 받은 값", RESULT);
+                if(RESULT.length() != 0) {  //-----------------------------관광API 다 쓰면
 
-                //사진링크, 타이틀(관광명), 분야뭔지 분리
-                name_1 = RESULT.split("\n");
+                    //사진링크, 타이틀(관광명), 분야뭔지 분리
+                    name_1 = RESULT.split("\n");
 
-                for (int i = 0; i < name_1.length; i++) {
-                    name_2 = name_1[i].split("  ");
+                    for (int i = 0; i < name_1.length; i++) {
+                        name_2 = name_1[i].split("  ");
 
-                    //img_Url이 없는 경우도 있기 때문에, length = 3 = 있음/ 2 = 없음
-                    if (name_2.length == 3) {
-                        contentid[i] = name_2[0];
-                        img_Url[i] = name_2[1];
-                        name[i] = name_2[2];
-                    } else {
-                        contentid[i] = name_2[0];
-                        img_Url[i] = null;
-                        name[i] = name_2[1];
+                        //img_Url이 없는 경우도 있기 때문에, length = 3 = 있음/ 2 = 없음
+                        if (name_2.length == 3) {
+                            contentid[i] = name_2[0];
+                            img_Url[i] = name_2[1];
+                            name[i] = name_2[2];
+                        } else {
+                            contentid[i] = name_2[0];
+                            img_Url[i] = null;
+                            name[i] = name_2[1];
+                        }
                     }
                 }
 
                 //리사이클러에 들어갈 데이터를 넣는다
                 for (int i = 0; i < name_1.length; i++) {
-                    items.add(new Recycler_item(img_Url[i], name[i], contentid[i] , subject, "", ""));
+                    items.add(new Recycler_item(img_Url[i], name[i], contentid[i], subject, "", ""));
                 }
 
             } catch (InterruptedException ex) {
@@ -307,7 +316,6 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
         @Override
         protected void onPreExecute() {
             //초기화 단계에서 사용
-//            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -409,7 +417,9 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
         }
         @Override
         protected void onPostExecute(String result) {
+
             super.onPostExecute(result);
+
         }
     }
 

@@ -1,6 +1,7 @@
 package Page2_X;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import Page2_1_1.OnItemClick;
+import Page2_1_X.Page2_1_X;
 
 public class Page2_X_Adapter extends RecyclerView.Adapter<Page2_X_Adapter.ViewHolder> {
     private String[] stay = new String[100];  // 하트의 클릭 여부
@@ -121,16 +123,34 @@ public class Page2_X_Adapter extends RecyclerView.Adapter<Page2_X_Adapter.ViewHo
         });
 
 
-        //여기에 리스트를 클릭하면, 관광지 상세페이지로 넘어가는거 구현
-        holder.image.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(context,item.getContentviewID(),Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(context, Page3_1_X_X.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                context.startActivity(intent);
+            public void onClick(View view) {
+
+                if (view.getId() == R.id.page2_x_linearitem) {
+                    //Toast.makeText(context, item.getTitle() + "눌림", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, Page2_1_X.class);
+                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("contentID", item.getContentviewID());
+                    intent.putExtra("contenttypeid", item.getContenttypeid());
+                    intent.putExtra("image", item.getImage());
+                    intent.putExtra("cityname", cityName);
+                    context.startActivity(intent);
+                }
             }
         });
+
+
+        //여기에 리스트를 클릭하면, 관광지 상세페이지로 넘어가는거 구현
+//        holder.image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context,item.getContentviewID(),Toast.LENGTH_SHORT).show();
+////                Intent intent = new Intent(context, Page3_1_X_X.class);
+////                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////                context.startActivity(intent);
+//            }
+//        });
 
 
         //맵 띄우는 버튼 -> x, y좌표 전달 + 맵을 위에서 끌어내림

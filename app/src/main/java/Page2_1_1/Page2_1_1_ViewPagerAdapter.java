@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ public class Page2_1_1_ViewPagerAdapter extends RecyclerView.Adapter<Page2_1_1_V
     @Override
     public void onBindViewHolder(Page2_1_1_ViewPagerAdapter.ViewHolder holder, final int position) {
         // 앞에서 받아온 값이랑 position이 같으면 펼치기
-        if (numCourse == 1) {
+        if (numCourse == 1 && isFirst) {
             //height 값을 임의로 준다.
             int dpValue = 380;
             float d = context.getResources().getDisplayMetrics().density;
@@ -85,8 +86,6 @@ public class Page2_1_1_ViewPagerAdapter extends RecyclerView.Adapter<Page2_1_1_V
                 determine_API = "delete";
             } else
                 determine_API = "make";
-        } else {
-            determine_API = "delete";
         }
 
         //첫번째 아이템은 펼쳐져서 보임
@@ -244,6 +243,7 @@ public class Page2_1_1_ViewPagerAdapter extends RecyclerView.Adapter<Page2_1_1_V
                     vp_bg.requestLayout();
                     vp.setVisibility(isExpanded ? View.VISIBLE : View.INVISIBLE);   // imageView가 실제로 사라지게하는 부분
                     updown_img.setBackgroundResource(isExpanded ? R.drawable.ic_down_btn : R.drawable.ic_up_btn);
+                    tabLayout.setSelectedTabIndicatorColor(isExpanded ? Color.parseColor("#4DD9A9") : Color.parseColor("#00000000"));
                 }
             });
             va.start();

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="Transparent" parent="@style/Theme.AppCompat">
@@ -24,6 +25,28 @@
         true - 반투명 검정 /  false - 완전 투명
         -->
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    // 바텀시트
+    // 바텀시트 스타일
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    // 흰색
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_dialog_fragment</item>
+    </style>
+
+    // 보라색
+    <style name="AppBottomSheetDialogTheme2"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle2</item>
+    </style>
+
+    <style name="AppModalStyle2" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_dialog_purple</item>
     </style>
 
     <style name="Theme.Dark" parent="AppTheme.NoActionBar">
@@ -73,10 +96,11 @@
     </style>
 
     <style name="course_text">
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">15dp</item>
         <item name="android:textColor">#000000</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">-0.03</item>
-        <item name="android:fontFamily">@font/notosans_extralight</item>
+        <item name="android:scaleX">0.98</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="tablayout_text">
@@ -87,22 +111,22 @@
     </style>
 
     <style name="courseMore_text">
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">11dp</item>
         <item name="android:textColor">#000000</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">-0.03</item>
-        <item name="android:fontFamily">@font/notosans_extralight</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="cardview_subjectText">
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:fontFamily">@font/notosans_extralight</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="cardview_titleText">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:fontFamily">@font/notosans</item>
+        <item name="android:fontFamily">@font/gothic_bold</item>
     </style>
 
     <style name="page2_1_x_moreText">888888888
@@ -114,13 +138,21 @@
     <style name="cardview_subjectText2">
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">#000000</item>
-        <item name="android:fontFamily">@font/notosans_extralight</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="cardview_titleText2">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#000000</item>
-        <item name="android:fontFamily">@font/notosans</item>
+        <item name="android:scaleX">0.98</item>
+        <item name="android:fontFamily">@font/gothic_bold</item>
+    </style>
+
+    <style name="cat_text">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">#5C5C5C</item>
+        <item name="android:scaleX">0.98</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="subtitle_text">
@@ -130,32 +162,40 @@
     </style>
 
     <style name="some_id">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">24dp</item>
         <item name="android:textColor">#000000</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">-0.03</item>
-        <item name="android:fontFamily">@font/notosans</item>
+        <item name="android:fontFamily">@font/gothic_bold</item>
     </style>
 
     <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:textSize">16dp</item>
-        <item name="android:fontFamily">@font/notosans_extralight</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:scaleX">0.95</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="page2_tip">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#275871</item>
-        <item name="android:fontFamily">@font/notosans_semibold</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="page2_tip_text">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#275871</item>
-        <item name="android:fontFamily">@font/notosans_regular</item>
+        <item name="android:fontFamily">@font/gothic_medium</item>
     </style>
 
     <style name="AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorAccent</item>
 
+    </style>
+
+    //말풍선 텍스트
+    <style name="info_message">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
     </style>
 
 

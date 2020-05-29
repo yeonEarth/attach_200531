@@ -22,19 +22,25 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.example.androidtagview.TagContainerLayout
-                android:id="@+id/tagcontainerLayout1"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:padding="10dp"
-                android:elevation="3dp"
                 android:background="@drawable/tagview_bg"
-                app:container_enable_drag="true"
-                app:horizontal_interval="10dp"
-                app:tag_clickable="true"
-                app:tag_enable_cross="true"
-                app:vertical_interval="10dp" />
+                android:elevation="3dp"
+                android:layout_margin="6dp">
+
+                <com.example.androidtagview.TagContainerLayout
+                    android:id="@+id/tagcontainerLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:elevation="5dp"
+                    app:container_enable_drag="true"
+                    app:horizontal_interval="10dp"
+                    app:tag_clickable="true"
+                    app:tag_enable_cross="true"
+                    app:vertical_interval="10dp" />
+            </FrameLayout>
 
         </LinearLayout>
 

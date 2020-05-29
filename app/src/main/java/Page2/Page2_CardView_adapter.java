@@ -25,6 +25,7 @@ import Page2_1_1.Page2_1_1;
 
 import Page1.Page1_1_1;
 import Page2_1_1.OnItemClick;
+import Page2_1_X.Page2_1_X;
 import Page2_X.Page2_X_CategoryBottom;
 
 public class Page2_CardView_adapter extends RecyclerView.Adapter<Page2_CardView_adapter.ViewHolder> {
@@ -92,6 +93,23 @@ public class Page2_CardView_adapter extends RecyclerView.Adapter<Page2_CardView_
                     mCallback.delete_db(item.getContentviewID());
                     stay[position] = null;
                     // Toast.makeText(context,"관심관광지를 취소했습니다",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (view.getId() == R.id.page2_linearitem) {
+                    //Toast.makeText(context, item.getTitle() + "눌림", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, Page2_1_X.class);
+                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("contentID", item.getContentviewID());
+                    intent.putExtra("contenttypeid", item.getType());
+                    intent.putExtra("image", item.getImage());
+                    intent.putExtra("cityname", cityName);
+                    context.startActivity(intent);
                 }
             }
         });

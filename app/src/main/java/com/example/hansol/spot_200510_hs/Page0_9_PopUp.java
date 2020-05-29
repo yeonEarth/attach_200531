@@ -28,6 +28,8 @@ public class Page0_9_PopUp extends AppCompatActivity {
 
     String name, sub, editName;
 
+    int[] score = new int[8];
+
     // 키보드 내릴때
     InputMethodManager keyboard;
 
@@ -49,10 +51,47 @@ public class Page0_9_PopUp extends AppCompatActivity {
         Intent intent = getIntent();
         name = intent.getStringExtra("닉네임");
         sub = intent.getStringExtra("서브이름");
+        score = intent.getIntArrayExtra("Page9");
 
         // 앞에서 받아온 걸로 적용
         nickName.setText(name);
         subTitle.setText(sub);
+
+        //메뉴 사진
+        if (score[2] == 0 && score[3] == 0) {
+            profile.setBackgroundResource(R.drawable.ic_ant);
+        }
+
+        if (score[2] == 1 && score[3] == 1) {
+            profile.setBackgroundResource(R.drawable.ic_sloth);
+        }
+
+        if (score[2] != score[3]) {
+            if (score[6] == 0) {
+                profile.setBackgroundResource(R.drawable.ic_otter);
+            } else if (score[2] == 1 ) {
+
+                profile.setBackgroundResource(R.drawable.ic_soul);
+
+            } else if (score[2] == 0) {
+
+                profile.setBackgroundResource(R.drawable.ic_excel);
+
+            }
+        }
+
+        if (score[1] == 0) {
+            if (score[4] == 0 && score[5] == 1) {
+                profile.setBackgroundResource(R.drawable.ic_sprout);
+            }
+            else if (score[4] == 1&&score[5] == 0) {
+                profile.setBackgroundResource(R.drawable.ic_chick);
+
+            }
+        }
+        if (score[1] == 4&&score[5] == 0) {
+            profile.setBackgroundResource(R.drawable.ic_chick);
+        }
 
         nickName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -82,6 +121,7 @@ public class Page0_9_PopUp extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 // 다시 메인으로 보낼 수정된 이름
                 editName = nickName.getText().toString();
+                sub = subTitle.getText().toString();
                 Log.i("보낼 이름", editName);
             }
         });
@@ -105,6 +145,7 @@ public class Page0_9_PopUp extends AppCompatActivity {
                 } else {
                     Intent checkIntent = new Intent();
                     checkIntent.putExtra("result", editName);
+                    checkIntent.putExtra("result2", sub);
                     setResult(RESULT_OK, checkIntent);
                     finish();
                     overridePendingTransition(0,0);

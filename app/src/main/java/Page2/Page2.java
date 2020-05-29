@@ -1,23 +1,35 @@
 package Page2;
 
 import android.animation.ValueAnimator;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,16 +37,19 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hansol.spot_200510_hs.Page0_9_PopUp;
 import com.example.hansol.spot_200510_hs.R;
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -52,10 +67,15 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import DB.DbOpenHelper;
+import DB.Like_DbOpenHelper;
+import DB.Menu_DbOpenHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
+import Page1.Page1;
 import Page1.Page1_1_1;
 import Page1.Page2_1;
+import Page1_schedule.LocationUpdatesService;
+import Page1_schedule.Location_Utils;
 import Page2_1_1.Page2_1_1;
 import Page2_1_1.course;
 import Page2_X.NetworkStatus;
@@ -65,7 +85,7 @@ import Page3.Page3_Main;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
-public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
+public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  SharedPreferences.OnSharedPreferenceChangeListener{
 
     int station_code = 999;
     String[] arr_line = null;
@@ -115,6 +135,9 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
     private String  subject, station, id;
     private String contentTypeId, cat1, cat2;
 
+    // 찜한 여행지 저장하는 리스트
+    private ArrayList<String > mySpot = new ArrayList<String >();
+
     //역 이름을 받아서 지역코드랑 시군구코드 받기 위한 배열
     String returnResult, url;
 
@@ -135,6 +158,8 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
 
     ImageButton logo;
 
+    TextView noCourse, noCourse2;
+
     Button all_cat_btn, schedulePlus_btn,schedulePlus_btn2;
 
     //page2 코스 더보기
@@ -152,6 +177,42 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
     ScrollView scrollView;
     int page = 1;     //api 페이지 수
 
+    private ProgressBar loading_progress;
+    private RelativeLayout info_message;
+    private Menu_DbOpenHelper menu_dbOpenHelper;
+    private Button info_dismiss_btn;
+    private List<String> onoff = new ArrayList<>();
+
+    //메뉴바 프로필 관련
+    ImageView menu_img;
+    TextView menu_text1, menu_text2;
+
+    int[] score = new int[8];
+    String mScore[] = new String[8];
+
+    private Like_DbOpenHelper mLikeDpOpenHelper;
+    String like, nickName, sub;
+    ImageButton edit_nickname;
+
+    //위치서비스 관련
+    private MyReceiver myReceiver;
+    private boolean mBound = false;
+    private LocationUpdatesService mService = null;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +229,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         mDbOpenHelper = new DbOpenHelper(Page2.this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
+        showDatabase();
 
         //scrollView = (ScrollView)findViewById(R.id.page2_scroll);
         //scrollView.smoothScrollBy(0, 0);
@@ -180,8 +242,100 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         userText1 = (TextView)findViewById(R.id.menu_text1);
         userText2 = (TextView)findViewById(R.id.menu_text2);
         positionBtn = (Switch)findViewById(R.id.menu_postion_btn);
+        alramBtn = (Switch)findViewById(R.id.menu_alram_btn);
         recyclerView1 = (RecyclerView)findViewById(R.id.menu_recyclerview1);
 
+        loading_progress = findViewById(R.id.page2_progress);
+        info_message = findViewById(R.id.info_message1);
+        info_dismiss_btn = findViewById(R.id.info_dismiss_btn);
+
+        menu_img = (ImageView)findViewById(R.id.menu_userImage);
+        menu_text1 = (TextView) findViewById(R.id.menu_text1);
+        menu_text2 = (TextView) findViewById(R.id.menu_text2);
+        edit_nickname = (ImageButton)findViewById(R.id.menu_edit_btn);
+
+        //최소 실행 때 보이는 안내창
+        SharedPreferences a = getSharedPreferences("info1", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = a.edit();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                editor.putInt("info1", 1);
+                editor.commit();
+            }
+        }, 300);
+
+        //첫 실행시 나오는 안내 말풍선
+        SharedPreferences preferences =getSharedPreferences("info1", MODE_PRIVATE);
+        int firstviewShow = preferences.getInt("info1", 0);
+
+        // 1이 아니라면 취향파악페이지 보여주기 = 처음 실행이라면
+        if (firstviewShow != 1) {
+            info_message.setVisibility(View.VISIBLE);
+        }
+
+        info_dismiss_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                info_message.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        // DB열기
+        menu_dbOpenHelper = new Menu_DbOpenHelper(this);
+        menu_dbOpenHelper.open();
+        menu_dbOpenHelper.create();
+        notity_listner("");
+
+        Intent intent2 = getIntent();
+        score = intent2.getIntArrayExtra("score");
+
+
+        // 취향파악 DB열기
+        mLikeDpOpenHelper = new Like_DbOpenHelper(this);
+        mLikeDpOpenHelper.open();
+        mLikeDpOpenHelper.create();
+        showLikeDB();
+
+
+
+        //위치 스위치 관련
+        myReceiver = new MyReceiver();
+        setButtonsState(Location_Utils.requestingLocationUpdates(this));
+        positionBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                } else {
+                    mService.removeLocationUpdates();
+                }
+            }
+        });
+
+
+
+
+        //알림 스위치 버튼
+        setButtonsState_notity();
+        alramBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    menu_dbOpenHelper.open();
+                    menu_dbOpenHelper.deleteAllColumns();
+                    menu_dbOpenHelper.insertColumn("true", "0");
+                    //  menu_dbOpenHelper.close();
+
+                }else {
+                    menu_dbOpenHelper.open();
+                    menu_dbOpenHelper.deleteAllColumns();
+                    menu_dbOpenHelper.insertColumn("false", "0");
+                    //  menu_dbOpenHelper.close();
+                }
+            }
+        });
 
         mDrawerToggle = new EndDrawerToggle(this,drawer,toolbar2,R.string.open_drawer,R.string.close_drawer){
             @Override //드로어가 열렸을때
@@ -199,7 +353,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
 
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name, context);
+        adapter2 = new Main_RecyclerviewAdapter(name, context, mySpot.size());
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더
@@ -226,6 +380,9 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         subject_title = (TextView) findViewById(R.id.page2_cat);
         spot_error_txt = (TextView)findViewById(R.id.spot_error_txt2);
 
+        noCourse = (TextView)findViewById(R.id.page2_noCourse);
+        noCourse2 = (TextView)findViewById(R.id.page2_noCourse2);
+
         courseMore = (TextView) findViewById(R.id.page2_courseMore);
         appBarLayout = (AppBarLayout)findViewById(R.id.app_bar);
 
@@ -234,13 +391,28 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Page2.this, Page1.Page1.class);
-                intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent intent = new Intent(Page2.this, Page1.class);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
-                //overridePendingTransition(0,0);
+                intent.putExtra("Logo", "1");
                 startActivity(intent);
 
+                overridePendingTransition(0,0);
+
+            }
+        });
+
+
+// 프로필편집 버튼 눌렀을 때
+        edit_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Page0_9_PopUp.class);
+
+                intent.putExtra("서브이름", sub);
+                intent.putExtra("닉네임", nickName);
+                intent.putExtra("Page9",score);
+                intent.addFlags(intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -372,7 +544,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
             }
         }
 
-        Toast.makeText(getApplicationContext(), getSubject, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), getSubject, Toast.LENGTH_SHORT).show();
 
         getData();
 
@@ -401,12 +573,22 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         courseMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), subject, Toast.LENGTH_SHORT).show();
+
+                loading_progress.setVisibility(View.VISIBLE);
+
                 Intent intent = new Intent(Page2.this, Page2_1_1.class);
                 intent.putExtra("subject_title", subject);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loading_progress.setVisibility(View.INVISIBLE);
+                    }
+                }, 400);
             }
         });
 
@@ -415,12 +597,23 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         courseBox1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                loading_progress.setVisibility(View.VISIBLE);
+
                 Intent intent = new Intent(getApplicationContext(), Page2_1_1.class);
                 intent.putExtra("position", 0);
                 intent.putExtra("subject_title", subject);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loading_progress.setVisibility(View.INVISIBLE);
+                    }
+                }, 400);
             }
         });
 
@@ -428,12 +621,23 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         courseBox2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                loading_progress.setVisibility(View.VISIBLE);
+
                 Intent intent = new Intent(getApplicationContext(), Page2_1_1.class);
                 intent.putExtra("position", 1);
                 intent.putExtra("subject_title", subject);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loading_progress.setVisibility(View.INVISIBLE);
+                    }
+                }, 400);
             }
         });
 
@@ -661,6 +865,18 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
                 st3 = new String[]{"횡성", "광명"};
                 st4 = new String[]{"성남", "가평"};
                 break;
+
+            case "음식점":
+                st1 = new String[]{"", ""};
+                st2 = new String[]{"", ""};
+                st3 = new String[]{"", ""};
+                st4 = new String[]{"", ""};
+                noCourse.setVisibility(View.VISIBLE);
+                noCourse2.setVisibility(View.VISIBLE);
+                courseBox1.setVisibility(View.GONE);
+                courseBox2.setVisibility(View.GONE);
+                courseMore.setClickable(false);
+                break;
             default:
                 break;
         }
@@ -726,8 +942,26 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
                 cat1 = "A03";
                 cat2 = "";
                 break;
+            case "음식점":
+                contentTypeId = "39";
+                cat1 = "A05";
+                cat2 = "A0502";
+                break;
             default:
                 break;
+        }
+    }
+
+    public void showDatabase(){
+        Cursor iCursor = mDbOpenHelper.selectColumns();
+        //iCursor.moveToFirst();
+        Log.d("showDatabase", "DB Size: " + iCursor.getCount());
+        mySpot.clear();
+
+        while(iCursor.moveToNext()){
+            String tempName = iCursor.getString(iCursor.getColumnIndex("name"));
+
+            mySpot.add(tempName);
         }
     }
 
@@ -839,7 +1073,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         @Override
         protected void onPreExecute() {
             //초기화 단계에서 사용
-//            progressBar.setVisibility(View.VISIBLE);
+            loading_progress.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -952,13 +1186,201 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick {
         }
         @Override
         protected void onPostExecute(String result) {
+
             super.onPostExecute(result);
+
+            loading_progress.setVisibility(View.INVISIBLE);
+
         }
     }
+
+    public void showLikeDB() {
+        Cursor likeCursor = mLikeDpOpenHelper.selectColumns();
+        Log.d("showLikeDB", "DB Size : " + likeCursor.getCount());
+
+        while (likeCursor.moveToNext()) {
+            String tempLike = likeCursor.getString(likeCursor.getColumnIndex("userid"));
+            String tempNickname = likeCursor.getString(likeCursor.getColumnIndex("nickname"));
+            String tempSub = likeCursor.getString(likeCursor.getColumnIndex("sub"));
+            like = tempLike;
+            nickName = tempNickname;
+            sub = tempSub;
+            Log.d("nickkkk",nickName);
+        }
+
+        menu_text1.setText(sub);
+        menu_text2.setText(nickName);
+
+        // DB에 값이 있다면
+        if (like != null) {
+            // mScore에 일단 값을 쪼개서 저장하고
+            mScore = like.split(" ");
+//            Log.i("mScore", like);
+            for (int i = 0 ; i < mScore.length ; i++) {
+//                Log.i("mScore", mScore[i]);
+                score[i] = Integer.parseInt(mScore[i]); // Int로 캐스팅
+//                Log.i("score", String.valueOf(score[i]));
+            }
+
+            if (score[2] == 0 && score[3] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_ant);
+            }
+
+            if (score[2] == 1 && score[3] == 1) {
+                menu_img.setBackgroundResource(R.drawable.ic_sloth);
+            }
+
+            if (score[2] != score[3]) {
+                if (score[6] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_otter);
+                } else if (score[2] == 1 ) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_soul);
+
+                } else if (score[2] == 0) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_excel);
+
+                }
+            }
+
+            if (score[1] == 0) {
+                if (score[4] == 0 && score[5] == 1) {
+                    menu_img.setBackgroundResource(R.drawable.ic_sprout);
+                }
+                else if (score[4] == 1&&score[5] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_chick);
+
+                }
+            }
+
+            if (score[1] == 4&&score[5] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_chick);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("result");
+                //String result2 = data.getStringExtra("result2");
+                menu_text2.setText(result);
+                nickName = result;
+                //db_nickName = nickName;
+
+            }
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0,0);
     }
+
+    public void notity_listner(String sort){
+        Cursor iCursor = menu_dbOpenHelper.selectColumns();
+
+        while(iCursor.moveToNext()){
+            String  id = iCursor.getString(iCursor.getColumnIndex("userid"));
+            Log.i("갑자기 왜 안돼", String.valueOf(iCursor.getCount()) + "/" + id);
+            onoff.add(id);
+        }
+
+        //최초 실행을 위함
+        if(iCursor.getCount() == 0){
+            menu_dbOpenHelper.insertColumn("true", "0");
+            onoff.add("true");
+        }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onStop() {
+        if (mBound) {
+            unbindService(mServiceConnection);
+            mBound = false;
+        }
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+
+    //위치 스위치 상태
+    private void setButtonsState(boolean requestingLocationUpdates ) {
+        if (requestingLocationUpdates) {
+            positionBtn.setChecked(true);
+        } else if( !requestingLocationUpdates){
+            positionBtn.setChecked(false);
+        }
+    }
+
+
+
+    //알림 스위치 상태
+    private void setButtonsState_notity() {
+        if (onoff.get(0).equals("true")) {
+            alramBtn.setChecked(true);
+        } else {
+            alramBtn.setChecked(false);
+        }
+
+    }
+
+
+
+    //포그라운드와 연결 ( 핸드폰 껐을 때도 돌아가도록 하는 부분)
+    private class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
+            if (location != null) {
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    }
+
+
+
 }

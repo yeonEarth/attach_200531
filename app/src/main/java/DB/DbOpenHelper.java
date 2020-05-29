@@ -111,9 +111,10 @@ public class  DbOpenHelper {
 
     // 컨텐츠id 검색
     public Cursor selectIdCulumns(String contentID) {
-//        Cursor c = mDB.rawQuery("SELECT * FROM usertable WHERE userid = '" + contentID + "'", null);
-//        return c;
-        return mDB.query(DataBases.CreateDB._TABLENAME0, null, contentID, null, null, null,null);
+        Cursor c = mDB.rawQuery("SELECT * FROM usertable WHERE userid = '" + contentID + "'", null);
+        return c;
+        //  return mDB.query(DataBases.CreateDB._TABLENAME0, null, contentID, null, null, null,null);
+
     }
 
 

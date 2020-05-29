@@ -4,16 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_bg02_back">
 
 
     //애니메이션
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/page0_2_bg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="bg02.json"
+        app:lottie_fileName="bg02_c.json"
         app:lottie_loop="true"/>
 
 
@@ -24,12 +25,11 @@
 
 
         // 뒤로가기 버튼
-        <androidx.appcompat.widget.AppCompatButton
+        <TextView
             android:id="@+id/page0_3_back"
             android:layout_width="43dp"
             android:layout_height="43dp"
             android:background="@drawable/ic_icon_back_page0"
-            android:elevation="5dp"
             android:clickable="true"
             android:layout_marginTop="8dp"/>
 
@@ -49,7 +49,7 @@
                 android:background="@drawable/round_purple"
                 android:layout_toRightOf="@+id/round1"
                 android:text="STEP 2"
-                android:fontFamily="@font/notosans_semibold"
+                android:fontFamily="@font/gothic_medium"
                 android:textColor="#FFFFFF"
                 android:gravity="center" />
 
@@ -111,15 +111,16 @@
             android:id="@+id/page3_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:layout_below="@+id/page0_3_step_layout">
             // Q2
             <TextView
                 android:id="@+id/page0_3_q"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="여행을 떠나게 된 당신, 누구와\n함께 갈까요?"
-                android:fontFamily="@font/notosans_semibold"
+                android:text="어떤 스타일의 여행을 선호하시나요?"
+                android:fontFamily="@font/gothic_regular"
+                android:lineSpacingExtra="10dp"
                 android:textColor="#000000"
                 android:textSize="24dp"
                 android:gravity="left"/>
@@ -141,8 +142,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:clipToPadding="false"
-                android:padding="4dp"
-                android:layout_marginBottom="4dp">
+                android:padding="4dp">
                 // 도시/문화체험
                 <TextView
                     android:id="@+id/page0_3_a1"
@@ -153,7 +153,7 @@
                     android:gravity="center"
                     android:textSize="16dp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/notosans_regular"
+                    android:fontFamily="@font/gothic_light"
                     android:layout_weight="1"
                     android:layout_marginRight="2dp"
                     android:elevation="3dp"
@@ -169,7 +169,7 @@
                     android:gravity="center"
                     android:textSize="16dp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/notosans_regular"
+                    android:fontFamily="@font/gothic_light"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:elevation="3dp"
@@ -179,10 +179,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="4dp"
                 android:clipToPadding="false"
-                android:padding="4dp"
-                android:layout_marginBottom="4dp">
+                android:padding="4dp">
                 // 맛집 탐방
                 <TextView
                     android:id="@+id/page0_3_a3"
@@ -193,7 +191,7 @@
                     android:gravity="center"
                     android:textSize="16dp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/notosans_regular"
+                    android:fontFamily="@font/gothic_light"
                     android:layout_weight="1"
                     android:elevation="3dp"
                     android:layout_marginRight="2dp"
@@ -209,7 +207,7 @@
                     android:gravity="center"
                     android:textSize="16dp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/notosans_regular"
+                    android:fontFamily="@font/gothic_light"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:elevation="3dp"
@@ -225,11 +223,10 @@
                 android:gravity="center"
                 android:textSize="16dp"
                 android:textColor="#000000"
-                android:fontFamily="@font/notosans_regular"
+                android:fontFamily="@font/gothic_light"
                 android:layout_weight="1"
                 android:clickable="true"
-                android:elevation="3dp"
-                android:layout_marginTop="4dp"/>
+                android:elevation="3dp" />
         </LinearLayout>
 
         <TextView
@@ -240,7 +237,7 @@
             android:text="나중에 다시 하기"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:fontFamily="@font/notosans_extralight"
+            android:fontFamily="@font/gothic_thin"
             android:textColor="#CC000000"
             android:clickable="true"/>
     </RelativeLayout>

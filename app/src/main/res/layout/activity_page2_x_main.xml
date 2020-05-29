@@ -50,8 +50,10 @@
                     android:layout_toRightOf="@+id/page2_x_back_btn"
                     android:layout_marginLeft="18dp"
                     android:text="#서울"
-                    android:textSize="24sp"
-                    android:textColor="#4B4B4B" />
+                    android:textSize="26sp"
+                    android:textColor="#4B4B4B"
+                    android:fontFamily="@font/gothic_bold"
+                    android:scaleX="0.98" />
 
                 <View
                     android:layout_width="14dp"
@@ -71,8 +73,8 @@
                     android:layout_marginTop="35dp"
                     android:layout_marginRight="16dp"
                     android:textSize="11sp"
-                    android:textColor="#000000"/>
-
+                    android:textColor="#000000"
+                    android:fontFamily="@font/gothic_medium"/>
 
 
                 //맵뷰
@@ -82,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:elevation="8dp"
-                    android:paddingBottom="30dp"
+                    android:padding="16dp"
                     android:layout_marginTop="16dp">
 
                     <RelativeLayout
@@ -135,13 +137,14 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="22dp"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/map"
                     android:layout_marginLeft="16dp"
-                    android:textSize="16sp"
+                    android:textSize="16dp"
                     android:textColor="#000000"
-                    android:layout_marginTop="16dp"
-                    android:text="이런 관광지가 있어요"/>
+                    android:text="이런 관광지가 있어요"
+                    android:fontFamily="@font/gothic_medium"
+                    android:scaleX="0.98"/>
 
             </RelativeLayout>
 
@@ -186,5 +189,33 @@
         android:layout_gravity="center"
         android:visibility="invisible"
         android:background="#ffffff"/>
+
+    //안내메시지
+    <RelativeLayout
+        android:id="@+id/info_message2"
+        android:layout_width="226dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="75dp"
+        android:background="@drawable/ic_message_right"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="187dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="11dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/message2"
+            android:textAppearance="@style/info_message"/>
+
+        <Button
+            android:id="@+id/info_dismiss_btn2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:background="#00000000"/>
+
+    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

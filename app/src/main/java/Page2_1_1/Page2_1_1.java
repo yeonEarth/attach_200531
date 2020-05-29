@@ -46,7 +46,7 @@ public class Page2_1_1 extends AppCompatActivity {
         //앞에서 값을 받아옴
         Intent intent = getIntent();
         getSubject = intent.getStringExtra("subject_title");
-        Toast.makeText(getApplicationContext(), getSubject, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(), getSubject, Toast.LENGTH_SHORT).show();
         numCourse = intent.getIntExtra("position", numCourse);
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.page2_1_recyclerview);
@@ -57,8 +57,6 @@ public class Page2_1_1 extends AppCompatActivity {
         recyclerView.setAdapter(viewpager_adapter);
 
         schedule_btn = (Button) findViewById(R.id.page2_1_schedulePlus_btn);
-
-
 
 
         //뒤로가기 버튼 구현

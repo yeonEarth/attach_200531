@@ -24,6 +24,7 @@ public class Page0_9 extends AppCompatActivity {
     TextView edit_profile, course;
     ImageView char_img;
 
+
     ArrayList<String > a = new ArrayList<String>();
 
     // 다음 액티비티에 뿌릴 거
@@ -33,6 +34,7 @@ public class Page0_9 extends AppCompatActivity {
     String fav = "";    // 취향파악 저장
     String nickName = "";   // 닉네임 저장
     String db_nickName = "";   // db에 저장할 닉네임
+    String db_sub = "";   // db에 저장할 서브네임
 
     int[] score = new int[8];
 
@@ -47,6 +49,11 @@ public class Page0_9 extends AppCompatActivity {
         course = (TextView)findViewById(R.id.page0_9_course);
         char_img = (ImageView)findViewById(R.id.page0_9_char);
 
+        mDbOpenHelper = new Like_DbOpenHelper(Page0_9.this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+
+
         // 앞에서 값 받아오기
         final Intent intent = getIntent();
         score = intent.getIntArrayExtra("Page8");
@@ -57,11 +64,12 @@ public class Page0_9 extends AppCompatActivity {
         edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "프로필 편집 버튼 눌림", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "프로필 편집 버튼 눌림", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), Page0_9_PopUp.class);
 
-                intent.putExtra("서브이름", sub);
+                intent.putExtra("서브이름", result_sub_name.getText().toString());
                 intent.putExtra("닉네임", result_name.getText().toString());
+                intent.putExtra("Page9",score);
                 intent.addFlags(intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivityForResult(intent, 1);
             }
@@ -72,15 +80,23 @@ public class Page0_9 extends AppCompatActivity {
         }
 
         db_nickName = name;
+        db_sub = sub;
 
         Log.i("값 확인", fav);
-
         Log.i("데베 저장", fav+db_nickName);
 
         // 여행지 탐색 버튼 눌렀을 때
         course.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // DB에 취향 저장하기
+
+                mDbOpenHelper.open();
+                mDbOpenHelper.deleteAllColumns();
+                mDbOpenHelper.insertLikeColumn(fav, result_name.getText().toString(), result_sub_name.getText().toString());
+                mDbOpenHelper.close();
+
                 //Toast.makeText(getApplicationContext(), "여행지 입력 버튼 눌림", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), Page1.class);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
@@ -88,11 +104,7 @@ public class Page0_9 extends AppCompatActivity {
                 intent.putExtra("Page9",score);
                 startActivity(intent);
 
-                // DB에 취향 저장하기
-                mDbOpenHelper = new Like_DbOpenHelper(Page0_9.this);
-                mDbOpenHelper.open();
-                mDbOpenHelper.insertLikeColumn(fav, result_name.getText().toString());
-                mDbOpenHelper.close();
+
             }
         });
 
@@ -118,7 +130,7 @@ public class Page0_9 extends AppCompatActivity {
         }
 
         if (score[2] == 1 && score[3] == 1) {
-            name = "평화로운 나무늘보2";
+            name = "평화로운 나무늘보";
             result_name.setText(name);
             char_img.setBackgroundResource(R.drawable.ic_sloth);
 
@@ -129,6 +141,7 @@ public class Page0_9 extends AppCompatActivity {
                 name = "포토그래퍼 수달";
                 result_name.setText(name);
                 char_img.setBackgroundResource(R.drawable.ic_otter);
+
             } else if (score[2] == 1) {
                 if (score[2] == 1) {
                     name = "자유로운 영혼";
@@ -165,18 +178,20 @@ public class Page0_9 extends AppCompatActivity {
                 result_sub_name.setText(sub);
 
 
+
                 if (score[5] == 0) {
                     sub = "이것저것 궁금한 게 많은";
                     name = "여행 초심자 - 병아리";
                     result_sub_name.setText(sub);
                     result_name.setText(name);
                     char_img.setBackgroundResource(R.drawable.ic_chick);
-                }
+        }
             }
             if (score[4] == 2) {
                 if (score[5] == 1) {
                     sub = "어디든지 다 좋은";
                     result_sub_name.setText(sub);
+
 
                 }
             }
@@ -187,10 +202,12 @@ public class Page0_9 extends AppCompatActivity {
                 sub = "액티비티에 관심이 많은";
                 result_sub_name.setText(sub);
 
+
             }
             if (score[4] == 1) {
                 sub = "트렌드스팟은 꼭 가보는";
                 result_sub_name.setText(sub);
+
 
                 if (score[5] == 0) {
                     sub = "이것저것 궁금한 게 많은";
@@ -198,20 +215,24 @@ public class Page0_9 extends AppCompatActivity {
                     result_sub_name.setText(sub);
                     result_name.setText(name);
                     char_img.setBackgroundResource(R.drawable.ic_chick);
+
                 }
             }
             if (score[4] == 0 || score[4] == 2) {
                 if (score[5] == 1) {
                     sub = "어디든지 다 좋은";
                     result_sub_name.setText(sub);
+
                 }
             }
         } else if (score[1] == 1) {
             sub = "자연속에서 힐링하기 좋아하는";
             result_sub_name.setText(sub);
+
         } else if (score[1] == 3) {
             sub = "역사와 전통에 관심이 많은";
             result_sub_name.setText(sub);
+
         } else if (score[1] == 2) {
             sub = "금강산도 식후경! 전국 맛집 찾아다니는";
             result_sub_name.setText(sub);
@@ -224,9 +245,14 @@ public class Page0_9 extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("result");
+                String result2 = data.getStringExtra("result2");
                 result_name.setText(result);
                 nickName = result;
                 db_nickName = nickName;
+
+                result_sub_name.setText(result2);
+                sub = result2;
+                db_sub = sub;
             }
         }
     }

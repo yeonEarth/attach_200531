@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="#4DD9A9"/>
-    <corners android:radius="4dp"/>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true">
 
-</shape>
+        <!--image대신 직접 selector를 그리겠다고 선언한다. -->
+        <shape >
+            <solid android:color="#3EB38A"/>
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+
+    <!--위와 동일하다.
+    -->
+    <item android:state_pressed="false">
+        <shape >
+            <solid android:color="#4DD9A9"/>
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+</selector>
+

@@ -98,7 +98,7 @@ public class Page1_pagerAdapter extends PagerAdapter {
                 now_station.setVisibility(View.VISIBLE);
             }
 
-//현재역보다 이전역이면
+            //현재역보다 이전역이면
             else if ( position < gotPosition){
                 pre_station.setVisibility(View.INVISIBLE);
                 next_station.setVisibility(View.INVISIBLE);
@@ -122,6 +122,14 @@ public class Page1_pagerAdapter extends PagerAdapter {
                 page1_pager_layout.setBackgroundResource(R.drawable.rectangle4);
                 page1_gift_layout.setBackgroundResource(R.drawable.rectangle4);
                 textView.setTextColor(Color.parseColor("#2D624F"));
+            }
+
+            //환승역이면 버튼 색+ 버튼 글자 색을 바꿈-----------------------------------------여기 추가함
+            if(stationName.contains("환승")){
+                checkIn_btn.setText("환승역");
+                checkIn_btn.setTextColor(Color.parseColor("#FFFFFF"));
+                checkIn_btn.setBackgroundResource(R.drawable.btn_checkin_transfer);
+                textView.setTextColor(Color.parseColor("#616161"));
             }
 
             //여행 시작하기 버튼

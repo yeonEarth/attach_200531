@@ -54,12 +54,19 @@ public class Like_DbOpenHelper {
     }
 
     // 취향파악 DB insert
-    public long insertLikeColumn(String like, String nickname) {
+    public long insertLikeColumn(String like, String nickname, String sub) {
         ContentValues values = new ContentValues();
-        values.put(Like_DataBases.CreateDB.LIKE, like);
+        values.put(Like_DataBases.CreateDB.USERID, like);
         values.put(Like_DataBases.CreateDB.NICKNAME, nickname);
+        values.put(Like_DataBases.CreateDB.SUB, sub);
         return mDB.insert(Like_DataBases.CreateDB._TABLENAME0, null, values);
     }
+
+    // Delete All
+    public void deleteAllColumns() {
+        mDB.delete(Like_DataBases.CreateDB._TABLENAME0, null, null);
+    }
+
 
     // Select DB
     public Cursor selectColumns(){

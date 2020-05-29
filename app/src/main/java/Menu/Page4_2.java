@@ -24,9 +24,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.hansol.spot_200510_hs.Page0_9_PopUp;
 import com.example.hansol.spot_200510_hs.R;
 
 import java.util.ArrayList;
+
+import DB.DbOpenHelper;
+import DB.Like_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import DB.Train_DbOpenHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
@@ -66,24 +71,55 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
     ImageButton logo;
 
 
+    //프로필 관련
+    ImageButton main_schedule;
+    ImageButton main_register;
+    ImageButton main_like;
+
+    ImageView menu_img;
+    TextView menu_text1, menu_text2;
+
+    private Like_DbOpenHelper mLikeDpOpenHelper;    // 취향파악 부분
+    String  like, nickName, sub;
+
+    String mScore[] = new String[8];
+    int[] score = new int[8];
+
+    ImageButton edit_nickname;
+
+
+    //메인에 등록한 일정인지 확인하고 같으면 메인의 일정도 삭제해줘야함
+    private Second_MainDBHelper second_mainDBHelper;
+    private String second_key;
+
+    private DbOpenHelper spotDbOpenHelper;
+
+    // 찜한 여행지 저장하는 리스트
+    private ArrayList<String > mySpot = new ArrayList<String >();
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page4_2);
         context = getApplicationContext();
 
-        //(1)레이아웃 추가
-        //page4_2.xml
-        //page4_2_item.xml
-
-        //(2)데베 수정
-        //Train_db 모두 수정
 
         //데베 관련
+        second_mainDBHelper = new Second_MainDBHelper(Page4_2.this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
+
         mDbOpenHelper = new Train_DbOpenHelper(Page4_2.this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
         showDatabase();
+
+        // 찜한 관광지 DB열기
+        spotDbOpenHelper = new DbOpenHelper(this);
+        spotDbOpenHelper.open();
+        spotDbOpenHelper.create();
+        showSpotDatabase();
 
 
         //데이터가 없으면
@@ -118,6 +154,17 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
         positionBtn = (Switch)findViewById(R.id.menu_postion_btn);
         recyclerView1 = (RecyclerView)findViewById(R.id.menu_recyclerview1);
 
+        menu_img = (ImageView)findViewById(R.id.menu_userImage);
+        menu_text1 = (TextView) findViewById(R.id.menu_text1);
+        menu_text2 = (TextView) findViewById(R.id.menu_text2);
+        edit_nickname = (ImageButton)findViewById(R.id.menu_edit_btn);
+
+        // 취향파악 DB열기
+        mLikeDpOpenHelper = new Like_DbOpenHelper(this);
+        mLikeDpOpenHelper.open();
+        mLikeDpOpenHelper.create();
+        showLikeDB();
+
 
         logo = (ImageButton) findViewById(R.id.main_logo_page4_2);
         //메인 로고
@@ -125,12 +172,26 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Page1.Page1.class);
-                intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
-                //overridePendingTransition(0,0);
+                intent.putExtra("Logo", "1");
                 startActivity(intent);
 
+                overridePendingTransition(0,0);  //순서를 바꿔준다
+
+            }
+        });
+
+        // 프로필편집 버튼 눌렀을 때
+        edit_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Page0_9_PopUp.class);
+
+                intent.putExtra("서브이름", sub);
+                intent.putExtra("닉네임", nickName);
+                intent.putExtra("Page9",score);
+                intent.addFlags(intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -151,7 +212,7 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
 
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name, context);
+        adapter2 = new Main_RecyclerviewAdapter(name, context, mySpot.size());
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더
@@ -163,6 +224,11 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
 
     }
 
@@ -201,6 +267,106 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
 
     }
 
+    public void showLikeDB() {
+        Cursor likeCursor = mLikeDpOpenHelper.selectColumns();
+        Log.d("showLikeDB", "DB Size : " + likeCursor.getCount());
+
+        while (likeCursor.moveToNext()) {
+            String tempLike = likeCursor.getString(likeCursor.getColumnIndex("userid"));
+            String tempNickname = likeCursor.getString(likeCursor.getColumnIndex("nickname"));
+            String tempSub = likeCursor.getString(likeCursor.getColumnIndex("sub"));
+            like = tempLike;
+            nickName = tempNickname;
+            sub = tempSub;
+            Log.d("nickkkk",nickName);
+        }
+
+        menu_text1.setText(sub);
+        menu_text2.setText(nickName);
+
+        // DB에 값이 있다면
+        if (like != null) {
+            // mScore에 일단 값을 쪼개서 저장하고
+            mScore = like.split(" ");
+//            Log.i("mScore", like);
+            for (int i = 0 ; i < mScore.length ; i++) {
+//                Log.i("mScore", mScore[i]);
+                score[i] = Integer.parseInt(mScore[i]); // Int로 캐스팅
+//                Log.i("score", String.valueOf(score[i]));
+            }
+
+            if (score[2] == 0 && score[3] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_ant);
+            }
+
+            if (score[2] == 1 && score[3] == 1) {
+                menu_img.setBackgroundResource(R.drawable.ic_sloth);
+            }
+
+            if (score[2] != score[3]) {
+                if (score[6] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_otter);
+                } else if (score[2] == 1 ) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_soul);
+
+                } else if (score[2] == 0) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_excel);
+
+                }
+            }
+
+            if (score[1] == 0) {
+                if (score[4] == 0 && score[5] == 1) {
+                    menu_img.setBackgroundResource(R.drawable.ic_sprout);
+                }
+                else if (score[4] == 1&&score[5] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_chick);
+
+                }
+            }
+
+            if (score[1] == 4&&score[5] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_chick);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("result");
+                //String result2 = data.getStringExtra("result2");
+                menu_text2.setText(result);
+                nickName = result;
+                //db_nickName = nickName;
+
+            }
+        }
+    }
+
+
+
+
+
+
+
+    public void showSpotDatabase(){
+        Cursor iCursor = spotDbOpenHelper.selectColumns();
+        //iCursor.moveToFirst();
+        Log.d("showDatabase", "DB Size: " + iCursor.getCount());
+        mySpot.clear();
+
+        while(iCursor.moveToNext()){
+            String tempName = iCursor.getString(iCursor.getColumnIndex("name"));
+
+            mySpot.add(tempName);
+        }
+    }
+
 
     //데베 삭제할 때
     @Override
@@ -211,6 +377,11 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if(key.equals(second_key)){
+                    second_mainDBHelper.deleteAllColumns();
+                    second_mainDBHelper.close();
+                }
+
                 mDbOpenHelper.open();
                 mDbOpenHelper.deleteColumnByKey(key);
                 mDbOpenHelper.close();
@@ -242,6 +413,7 @@ class Train_Data {
 
 
 
+
     //데베값 정제한 값 구성
     class Train_Data_forRecyclerview {
         String keyDate;
@@ -253,5 +425,7 @@ class Train_Data {
             this.startdate = startdate;
             this.enddate = enddate;
         }
+
+
 }
 

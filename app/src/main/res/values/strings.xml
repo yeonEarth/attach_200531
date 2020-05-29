@@ -11,6 +11,10 @@
     <string name="train_err_course">해당 날짜에 검색되는 기차시간이 없습니다.  </string>
     <string name="train_err_time">지난 일정의 시간표는 제공하지 않습니다.  </string>
 
+    //코스 제공 안 할 때
+    <string name="noCourse">해당 카테고리는 코스를 제공하지 않습니다.  </string>
+
+
 
     <!--    위치 관련    -->
     <string name="launch_activity">Launch activity</string>
@@ -35,4 +39,13 @@
     <string name="menu5">내가 찜한 관광지</string>
     <string name="menu6">기차 스케쥴짜기</string>
     <string name="menu7">일정 등록하기</string>
+
+
+    <!--    최초 실행 안내 메시지 -->
+    <string name="message1">버튼을 누르면 내 일정에 \n해당 도시가 입력됩니다.</string>
+    <string name="message2">버튼을 누르면 내일로 \n혜택을 확인할 수 있어요.</string>
+    <string name="message3">원하는대로 도시 순서 이동, \n추가 및 삭제를 해보세요.</string>
+    <string name="message4">막대 버튼을 이동해서 \n나만의 스케쥴을 짤 수 있어요.</string>
+    <string name="message5">스케쥴은 나중에 다시 추가, \n수정 할 수 있습니다.</string>
+
 </resources>

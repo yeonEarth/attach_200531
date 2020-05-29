@@ -4,7 +4,8 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/page2_linearitem">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/page2_cardview"
@@ -58,7 +59,8 @@
                 android:maxWidth="85dp"
                 android:text="경복궁"
                 android:ellipsize="marquee"
-                android:textAppearance="@style/cardview_titleText"/>
+                android:textAppearance="@style/cardview_titleText"
+                android:scaleX="0.98"/>
         </LinearLayout>
 
 

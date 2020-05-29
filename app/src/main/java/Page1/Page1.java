@@ -24,9 +24,13 @@ import DB.Heart_page;
 import DB.Like_DbOpenHelper;
 import DB.Menu_DbOpenHelper;
 import DB.Page3_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import Page1_schedule.LocationUpdatesService;
 import Page1_schedule.Location_Utils;
+import Page1_schedule.Page1_Main;
 import Page2_X.Page2_X;
+
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -49,18 +53,22 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.hansol.spot_200510_hs.Page0;
+import com.example.hansol.spot_200510_hs.Page0_9_PopUp;
 import com.example.hansol.spot_200510_hs.R;
 import com.google.android.material.appbar.AppBarLayout;
 
+import java.io.File;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -74,6 +82,11 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
 public class Page1 extends AppCompatActivity implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
+
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
+    private long backKeyPressedTime = 0;
+    // 첫 번째 뒤로가기 버튼을 누를때 표시
+    private Toast toast;
 
     // 부모 뷰
     private Context context;
@@ -132,6 +145,11 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
     ImageButton main_schedule;
     ImageButton main_register;
     ImageButton main_like;
+    ImageButton edit_nickname;
+
+    ImageView menu_img;
+    TextView menu_text1, menu_text2;
+
 
     int[] score = new int[8];
     // 도시 저장할 어레이리스트
@@ -150,10 +168,18 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
     String sort = "userid";
 
     private Like_DbOpenHelper mLikeDpOpenHelper;    // 취향파악 부분
-    String like;
+    String  like, nickName, sub;
+
+    String nickName2;
     String mScore[] = new String[8];
 
-    @SuppressLint("WrongViewCast")
+    private ProgressBar loading_progress;
+
+    //두번째 메인 관련
+    private Second_MainDBHelper second_mainDBHelper;
+    List<String> list = new ArrayList<>();
+
+    @SuppressLint({"WrongViewCast", "SetTextI18n"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +195,33 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         positionBtn = (Switch)findViewById(R.id.menu_postion_btn);
         alramBtn = (Switch)findViewById(R.id.menu_alram_btn);
         recyclerView1 = (RecyclerView)findViewById(R.id.menu_recyclerview1);
+        menu_img = (ImageView)findViewById(R.id.menu_userImage);
+        menu_text1 = (TextView) findViewById(R.id.menu_text1);
+        menu_text2 = (TextView) findViewById(R.id.menu_text2);
+        edit_nickname = (ImageButton)findViewById(R.id.menu_edit_btn);
 
+        loading_progress = findViewById(R.id.page1_progress);
+
+
+
+       // DB열기
+        second_mainDBHelper = new Second_MainDBHelper(this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
+
+
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+
+
+        // 취향파악 DB열기
+        mLikeDpOpenHelper = new Like_DbOpenHelper(this);
+        mLikeDpOpenHelper.open();
+        mLikeDpOpenHelper.create();
+
+        showDatabase(sort);
+        showLikeDB();
 
         mDrawerToggle = new EndDrawerToggle(this,drawer,toolbar2,R.string.open_drawer,R.string.close_drawer){
             @Override //드로어가 열렸을때
@@ -185,9 +237,10 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Main_RecyclerviewAdapter(name, context);
+        adapter = new Main_RecyclerviewAdapter(name, context, mySpot.size());
         recyclerView1.setAdapter(adapter);
 
         //리사이클러뷰 헤더
@@ -200,6 +253,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         menu_dbOpenHelper.open();
         menu_dbOpenHelper.create();
         notity_listner("");
+
+
 
 
 
@@ -242,9 +297,11 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
 
 
 
+
         //백그라운드에서 위치가 다 돌았을 때 화면 켜지고 연결 해제
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
         String key =  intent.getStringExtra("key");
+        String touchLogo = intent.getStringExtra("Logo");
         if(key != null){
             Log.i("받음?", key);
             Handler handler  = new Handler();
@@ -254,6 +311,21 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
                     mService.removeLocationUpdates();
                 }
             }, 500);
+        }
+
+        if(touchLogo != null){
+            Log.i("로고 누르면 int 바귐", touchLogo);
+        } else {
+            //메인으로 등록할 일정이 있는지 검사
+            isSecondMain();
+
+            if(list.size() > 0 ) {
+                Intent intent3 = new Intent(getApplicationContext(), Page1_Main.class);
+                intent3.putExtra("key",  list.get(0));
+                intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                intent3.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent3);
+            }
         }
 
 
@@ -268,23 +340,6 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
 
 
 
-        //위아래로 드래그 했을 때 변화를 감지하는 부분
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-            int oldY = 0;
-            @Override
-            public void onScrollChanged() {
-                int scrollY = scrollView.getScrollY(); // For ScrollView
-                Log.i("X-Y", "-" + scrollY);
-                if(scrollY > oldY){
-                    Log.i("아래로 드래그", "^^");
-                    oldY = scrollY;
-                } else {
-                    Log.i("위로 드래그", "^^");
-                    oldY = scrollY;
-                }
-                // DO SOMETHING WITH THE SCROLL COORDINATES
-            }
-        });
 
         SharedPreferences preferences =getSharedPreferences("a", MODE_PRIVATE);
         int firstviewShow = preferences.getInt("First", 0);
@@ -295,19 +350,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             startActivity(intent2);
         }
 
-        // DB열기
-        mDbOpenHelper = new DbOpenHelper(this);
-        mDbOpenHelper.open();
-        mDbOpenHelper.create();
 
 
-        // 취향파악 DB열기
-        mLikeDpOpenHelper = new Like_DbOpenHelper(this);
-        mLikeDpOpenHelper.open();
-        mLikeDpOpenHelper.create();
-
-        showDatabase(sort);
-        showLikeDB();
 
         // DB에 값이 있다면
         if (like != null) {
@@ -320,7 +364,6 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
 //                Log.i("score", String.valueOf(score[i]));
             }
         } else {
-            final Intent intent2 = getIntent();
             // 나중에 하기 버튼 눌렀을 때 임의의 값 넘겨주기
             if (intent.hasExtra("Main")) {
                 score = intent.getIntArrayExtra("Main");
@@ -333,7 +376,11 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
                 score[4] = 1;
                 score[5] = 0;
             }
+
         }
+
+
+
 
 
         main_schedule = (ImageButton) findViewById(R.id.main_schedule);
@@ -350,7 +397,7 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             }
         });
 
-        // 일정등록 버튼 눌렀을 때-> 도시검색으로 바뀜
+        // 도시검색 버튼 눌렀을 때
         main_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -369,6 +416,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
 //                startActivity(intent3);
                 if (mySpot.size() == 0) {
                     Intent intent3 = new Intent(getApplicationContext(), Page1_1_0.class);
+                    intent3.putExtra("spotSize", mySpot.size());
+                    intent3.putExtra("score", score);
                     intent3.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent3);
@@ -376,6 +425,7 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
                     Intent intent3 = new Intent(getApplicationContext(), Page1_1_1.class);
                     intent3.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                    intent3.putExtra("score", score);
                     startActivity(intent3);
                 }
             }
@@ -468,6 +518,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             cityPicture.add(R.drawable.ulsan);
             cityPicture.add(R.drawable.pyeonchang);
         }
+
+
 
         // !!!!! 취향 카테고리 동적 생성 !!!!!
         // 부모 뷰 1 -> 첫 번째 줄
@@ -669,18 +721,29 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             cityName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    loading_progress.setVisibility(View.VISIBLE);
                     // 도시 버튼 눌렸을 때
                     Intent cityIntent = new Intent(Page1.this.getApplicationContext(), Page2_X_Main.class);
                     cityIntent.putExtra("Page1_stName", city.getCityName());
                     cityIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     cityIntent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(cityIntent);
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading_progress.setVisibility(View.INVISIBLE);
+                        }
+                    }, 400);
                 }
             });
 
             // 백그라운드 사진 가져오기
             city.setCityPic(real_cityPicture.get(i));
             cityName.setBackgroundResource(city.getCityPic());
+            cityName.setShadowLayer(0,3,3,Color.DKGRAY);
 
             Typeface typeface = getResources().getFont(R.font.notosans_bold);
             cityName.setTypeface(typeface);
@@ -689,60 +752,56 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             cityName.setPadding(city_padding,city_padding,city_padding,city_padding);
             cityName.setTextColor(Color.WHITE);
             cityName.setTypeface(cityName.getTypeface(), Typeface.BOLD);
-            cityName.setShadowLayer(5, 0, 0, Color.DKGRAY);
 
 //            cityName.setBackgroundResource(R.drawable.round_white);
             cityName.setGravity(Gravity.CENTER | Gravity.BOTTOM);
             cityName.setLayoutParams(params2);
             city_container.addView(cityName);
         }
+
+
+
+
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
+
 
 
     @Override
     public void onClick(View view) {
+
+        loading_progress.setVisibility(View.VISIBLE);
         Intent intent = new Intent(getApplicationContext(), Page2.class);
         intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra("score", score);
 
         // 버튼 별 카테고리 이름 넘기기
         if (view.getId() == R.id.page2_cat1) {
             intent.putExtra("subject_name", cat_text);
-            Toast.makeText(getApplicationContext(), "1" + cat_text, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getApplicationContext(), "1" + cat_text, Toast.LENGTH_SHORT).show();
         } else if (view.getId() == R.id.page2_cat2) {
             intent.putExtra("subject_name", cat_text2);
-            Toast.makeText(getApplicationContext(), "2" + cat_text2, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "2" + cat_text2, Toast.LENGTH_SHORT).show();
         } else if (view.getId() == R.id.page2_cat3) {
             intent.putExtra("subject_name", cat_text3);
-            Toast.makeText(getApplicationContext(), "3" + cat_text3, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "3" + cat_text3, Toast.LENGTH_SHORT).show();
         } else if (view.getId() == R.id.page2_cat4) {
             intent.putExtra("subject_name", cat_text4);
-            Toast.makeText(getApplicationContext(), "4" + cat_text4, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "4" + cat_text4, Toast.LENGTH_SHORT).show();
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loading_progress.setVisibility(View.INVISIBLE);
+            }
+        }, 400);
     }
 
     public class City {
@@ -782,13 +841,100 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
 
     public void showLikeDB() {
         Cursor likeCursor = mLikeDpOpenHelper.selectColumns();
-        Log.d("showLikeDatabase", "DB Size : " + likeCursor.getCount());
+        Log.d("showLikeDB", "DB Size : " + likeCursor.getCount());
 
         while (likeCursor.moveToNext()) {
-            String tempLike = likeCursor.getString(likeCursor.getColumnIndex("like"));
+            String tempLike = likeCursor.getString(likeCursor.getColumnIndex("userid"));
+            String tempNickname = likeCursor.getString(likeCursor.getColumnIndex("nickname"));
+            String tempSub = likeCursor.getString(likeCursor.getColumnIndex("sub"));
             like = tempLike;
+            nickName = tempNickname;
+            sub = tempSub;
+            Log.d("nickkkk",nickName);
+        }
+
+        menu_text1.setText(sub);
+        menu_text2.setText(nickName);
+
+        // 프로필편집 버튼 눌렀을 때
+        edit_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Page0_9_PopUp.class);
+
+                intent.putExtra("서브이름", sub);
+                intent.putExtra("닉네임", nickName);
+                intent.putExtra("Page9",score);
+                intent.addFlags(intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        // DB에 값이 있다면
+        if (like != null) {
+            // mScore에 일단 값을 쪼개서 저장하고
+            mScore = like.split(" ");
+//            Log.i("mScore", like);
+            for (int i = 0 ; i < mScore.length ; i++) {
+//                Log.i("mScore", mScore[i]);
+                score[i] = Integer.parseInt(mScore[i]); // Int로 캐스팅
+//                Log.i("score", String.valueOf(score[i]));
+            }
+
+            if (score[2] == 0 && score[3] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_ant);
+            }
+
+            if (score[2] == 1 && score[3] == 1) {
+                menu_img.setBackgroundResource(R.drawable.ic_sloth);
+            }
+
+            if (score[2] != score[3]) {
+                if (score[6] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_otter);
+                } else if (score[2] == 1 ) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_soul);
+
+                } else if (score[2] == 0) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_excel);
+
+                }
+            }
+
+            if (score[1] == 0) {
+                if (score[4] == 0 && score[5] == 1) {
+                    menu_img.setBackgroundResource(R.drawable.ic_sprout);
+                }
+                else if (score[4] == 1&&score[5] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_chick);
+
+                }
+            }
+
+            if (score[1] == 4&&score[5] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_chick);
+            }
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("result");
+                //String result2 = data.getStringExtra("result2");
+                menu_text2.setText(result);
+                nickName = result;
+                //db_nickName = nickName;
+
+            }
         }
     }
+
 
     public String setTextLength(String text, int length){
         if(text.length()<length){
@@ -800,10 +946,26 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         return text;
     }
 
+
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0,0);
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지났으면 Toast Show
+        // 2000 milliseconds = 2 seconds
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
+        // 현재 표시된 Toast 취소
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+            toast.cancel();
+        }
     }
 
     // 현재 액티비티 새로고침
@@ -850,13 +1012,23 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         }
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
+
     }
 
 
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
+
+        try {
+            trimCache(this);
+            // Toast.makeText(this,"onDestroy " ,Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //  clearApplicationData();  //--------------여기추가
     }
 
 
@@ -979,6 +1151,88 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             }
         });
         builder.show();
+    }
+
+    //메인으로 등록할 일정이 있는지 검사
+    public void isSecondMain(){
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+
+        while(iCursor.moveToNext()){
+            String  id = iCursor.getString(iCursor.getColumnIndex("userid"));
+            list.add(id);
+        }
+    }
+
+
+
+    //캐시삭제하는 부분----------------------------------------여기추가
+//    private void clearApplicationCache(){
+//        Log.i("부르긴 했는디", "삭제됐는가?");
+//        File cache = getCacheDir();
+//        File appDir = new File(cache.getParent());
+//        if(appDir.exists()){
+//            String[] children = appDir.list();
+//            for(String s : children){
+//                if( !s.equals("lib") && !s.equals("filed")){
+//                    deleteCache(new File(appDir, s));
+//                }
+//            }
+//        }
+//    }
+
+//    public void clearApplicationData() {
+//        File cache = getCacheDir();
+//        Log.i("부르긴 했는디", "삭제됐는가?"+String.valueOf(cache.length()));
+//        try {
+//        } catch (Exception e) {
+//        }
+//        File appDir = new File(cache.getParent());
+//        if (appDir.exists()) {
+//            String[] children = appDir.list();
+//            for (String s : children) {
+//                if (!s.equals("lib") && !(s.equals("shared_prefs"))) {
+//                    deleteDir(new File(appDir, s));
+//                }
+//            }
+//        }
+//    }
+//    public static boolean deleteDir(File dir) {
+//        if (dir != null && dir.isDirectory()) {
+//            String[] children = dir.list();
+//            for (int i = 0; i < children.length; i++) {
+//                boolean success = deleteDir(new File(dir, children[i]));
+//                if (!success) {
+//                    return false;
+//                }
+//            }
+//        }
+//        // The directory is now empty or this is a file so delete it
+//        return dir.delete();
+//    }
+
+
+    public static void trimCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            if (dir != null && dir.isDirectory()) {
+                deleteDir(dir);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // The directory is now empty so delete it
+        return dir.delete();
     }
 
 

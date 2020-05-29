@@ -24,12 +24,13 @@ public class Page2_1 extends AppCompatActivity implements View.OnClickListener {
      * subject_6 = 건축/조형
      * subject_7 = 문화
      * subject_8 = 레포츠
+     * subject_9 = 음식점
      */
 
     int[] button_id = {R.id.page2_1_subject_1, R.id.page2_1_subject_2, R.id.page2_1_subject_3,
             R.id.page2_1_subject_4, R.id.page2_1_subject_5, R.id.page2_1_subject_6,
-            R.id.page2_1_subject_7, R.id.page2_1_subject_8};
-    String[] subject_name = {"자연", "역사", "휴양", "체험", "산업", "건축/조형", "문화", "레포츠"};
+            R.id.page2_1_subject_7, R.id.page2_1_subject_8, R.id.page2_1_subject_9};
+    String[] subject_name = {"자연", "역사", "휴양", "체험", "산업", "건축/조형", "문화", "레포츠", "음식점"};
     Button[] subject = new Button[button_id.length];
 
     ImageView back_btn;

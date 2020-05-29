@@ -103,8 +103,9 @@ public class Page2_1_1_CardViewAdapter extends RecyclerView.Adapter<Page2_1_1_Ca
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (view.getId() == R.id.page2_1_1_linearitem) {
-                    Toast.makeText(context, item.getTitle() + "눌림", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, item.getTitle() + "눌림", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, Page2_1_X.class);
                     intent.putExtra("title", item.getTitle());
                     intent.putExtra("contentID", item.getContentviewID());
@@ -121,7 +122,7 @@ public class Page2_1_1_CardViewAdapter extends RecyclerView.Adapter<Page2_1_1_Ca
             @Override
             public void onClick(View v) {
                 //Toast.makeText(context,item.getContentviewID(),Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(context, Page3_1_X_X.class);
+//                Intent intent = new Intent(context, Page2_1_X.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                context.startActivity(intent);
             }

@@ -27,7 +27,7 @@ public class Page2_X_CategoryBottom extends BottomSheetDialogFragment {
     ListView listView;
     ArrayList<Category_item> list;
     Page2_X_CategoryBottom_Adapter adapter;
-    OnItemClick xInterface;
+    Page2_X_Interface xInterface;
     boolean Selected = false;
 
 
@@ -43,7 +43,7 @@ public class Page2_X_CategoryBottom extends BottomSheetDialogFragment {
         page2_x_main = (Page2_X_Main) getActivity();
 
         if(context instanceof Page2_X_Interface){
-            xInterface = (OnItemClick) context;
+            xInterface = (Page2_X_Interface) context;
         } else {
             throw new RuntimeException(context.toString() + "오류");
         }
@@ -66,6 +66,7 @@ public class Page2_X_CategoryBottom extends BottomSheetDialogFragment {
         list.add(new Category_item("건축/조형", "12", "A02", "A0205"));
         list.add(new Category_item("문화", "14", "A02", "A0206"));
         list.add(new Category_item("레포츠", "28", "A03", ""));
+
 
         final boolean[] isSelected = {false, false, false, false, false, false, false, false};
 

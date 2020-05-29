@@ -52,6 +52,12 @@ public class Page3_1_1_1_addCityBottomSheet extends BottomSheetDialogFragment im
         return new Page3_1_1_1_addCityBottomSheet();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.AppBottomSheetDialogTheme);
+    }
+
 
     @Override
     public void onAttach(Context context) {

@@ -134,7 +134,7 @@ public class Page2_X extends AppCompatActivity {
                         asyncDialog.setMessage(msg+"(으)로 이동중입니다..");
                         asyncDialog.show();
 
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Page2_X.this, Page2_X_Main.class);
                         intent.putExtra("st_name", msg);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

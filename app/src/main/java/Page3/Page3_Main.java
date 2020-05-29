@@ -2,19 +2,30 @@ package Page3;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,12 +49,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidtagview.ColorFactory;
 import com.example.androidtagview.TagContainerLayout;
 import com.example.androidtagview.TagView;
+import com.example.hansol.spot_200510_hs.Page0_9_PopUp;
 import com.example.hansol.spot_200510_hs.R;
 import com.example.hansol.spot_200510_hs.send_data;
 
@@ -57,16 +71,22 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import DB.DbOpenHelper;
+import DB.Like_DbOpenHelper;
+import DB.Menu_DbOpenHelper;
 import DB.Page3_DbOpenHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
+import Page1.Page1;
+import Page1_schedule.LocationUpdatesService;
+import Page1_schedule.Location_Utils;
 import Page2.Page2;
 import Page3_1.Page3_1_Main;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
-public class Page3_Main extends AppCompatActivity {
+public class Page3_Main extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     //태그 관련 변수
     private TagContainerLayout mTagContainerLayout1;
@@ -80,6 +100,18 @@ public class Page3_Main extends AppCompatActivity {
     ArrayList<String> course2 =null;
 
     ArrayList<String> items3 = null;
+
+    //메뉴바 프로필 관련
+    ImageView menu_img;
+    TextView menu_text1, menu_text2;
+
+    int[] score = new int[8];
+    String mScore[] = new String[8];
+
+    private Like_DbOpenHelper mLikeDpOpenHelper;
+    String like, nickName, sub;
+    ImageButton edit_nickname;
+
 
     //메뉴 관련
     private Context context;
@@ -149,6 +181,32 @@ public class Page3_Main extends AppCompatActivity {
 
     ImageButton logo;
 
+    //위치서비스 관련
+    private Menu_DbOpenHelper menu_dbOpenHelper;
+    private List<String> onoff = new ArrayList<>();
+    private MyReceiver myReceiver;
+    private boolean mBound = false;
+    private LocationUpdatesService mService = null;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
+
+    // 찜한 관광지 DB
+    private DbOpenHelper mDbOpenHelper;
+    // 찜한 여행지 저장하는 리스트
+    private ArrayList<String > mySpot = new ArrayList<String >();
+
 
 
     @Override
@@ -179,9 +237,64 @@ public class Page3_Main extends AppCompatActivity {
         userText1 = (TextView)findViewById(R.id.menu_text1);
         userText2 = (TextView)findViewById(R.id.menu_text2);
         positionBtn = (Switch)findViewById(R.id.menu_postion_btn);
+        alramBtn = (Switch)findViewById(R.id.menu_alram_btn);
         recyclerView1 = (RecyclerView)findViewById(R.id.menu_recyclerview1);
 
         nestedScrollView = (NestedScrollView)findViewById(R.id.nestScrollView_page3);
+
+        menu_img = (ImageView)findViewById(R.id.menu_userImage);
+        menu_text1 = (TextView) findViewById(R.id.menu_text1);
+        menu_text2 = (TextView) findViewById(R.id.menu_text2);
+        edit_nickname = (ImageButton)findViewById(R.id.menu_edit_btn);
+
+
+        // DB열기
+        menu_dbOpenHelper = new Menu_DbOpenHelper(this);
+        menu_dbOpenHelper.open();
+        menu_dbOpenHelper.create();
+        notity_listner("");
+
+
+
+        //위치 스위치 관련
+        myReceiver = new MyReceiver();
+        setButtonsState(Location_Utils.requestingLocationUpdates(this));
+        positionBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                } else {
+                    mService.removeLocationUpdates();
+                }
+            }
+        });
+
+
+
+
+        //알림 스위치 버튼
+        setButtonsState_notity();
+        alramBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    menu_dbOpenHelper.open();
+                    menu_dbOpenHelper.deleteAllColumns();
+                    menu_dbOpenHelper.insertColumn("true", "0");
+                    //  menu_dbOpenHelper.close();
+
+                }else {
+                    menu_dbOpenHelper.open();
+                    menu_dbOpenHelper.deleteAllColumns();
+                    menu_dbOpenHelper.insertColumn("false", "0");
+                    //  menu_dbOpenHelper.close();
+                }
+            }
+        });
+
+
+
 
 
         mDrawerToggle = new EndDrawerToggle(this,drawer,toolbar2,R.string.open_drawer,R.string.close_drawer){
@@ -198,9 +311,22 @@ public class Page3_Main extends AppCompatActivity {
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
+        // DB열기
+        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+        //showDatabase();
+
+        // 취향파악 DB열기
+        mLikeDpOpenHelper = new Like_DbOpenHelper(this);
+        mLikeDpOpenHelper.open();
+        mLikeDpOpenHelper.create();
+        showLikeDB();
+
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name2, context);
+        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size());
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더
@@ -216,12 +342,26 @@ public class Page3_Main extends AppCompatActivity {
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Page1.Page1.class);
-                intent.addFlags(intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent intent = new Intent(getApplicationContext(), Page1.class);
                 intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
-                //overridePendingTransition(0,0);
+                intent.putExtra("Logo", "1");
                 startActivity(intent);
+
+                overridePendingTransition(0,0);
+            }
+        });
+
+        // 프로필편집 버튼 눌렀을 때
+        edit_nickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Page0_9_PopUp.class);
+
+                intent.putExtra("서브이름", sub);
+                intent.putExtra("닉네임", nickName);
+                intent.putExtra("Page9",score);
+                intent.addFlags(intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -364,7 +504,14 @@ public class Page3_Main extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (autoCompleteTextView.getText().toString() != null) {
-                    page3_svg.loadUrl("javascript:setMessage('" + autoCompleteTextView.getText().toString() + "')");
+                    page3_svg.loadUrl("javascript:setMessage('" + autoCompleteTextView.getText().toString() +"' , '0')");
+
+                    //자동입력에서 입력되면 지도 줌아웃됨--------------------------------------------------------------------여기추가
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        page3_svg.zoomBy(0.1f);
+                    }
+
+                    Log.i("svg 스케일", String.valueOf(page3_svg.getScale()));
 
                     //키보드 내림
                     InputMethodManager mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -384,7 +531,6 @@ public class Page3_Main extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
-                page3_svg_bg.setSelected(true);
                 return false;
             }
         });
@@ -414,7 +560,7 @@ public class Page3_Main extends AppCompatActivity {
         page3_svg.setVerticalScrollBarEnabled(false);
 
         page3_svg.setWebChromeClient(new WebChromeClient() {
-            public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
+            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
                 new AlertDialog.Builder(Page3_Main.this)
                         .setTitle("안내")
                         .setMessage("해당역은 내일로 정차역이 아닙니다.")
@@ -506,11 +652,21 @@ public class Page3_Main extends AppCompatActivity {
                     mTagContainerLayout1.addTag(course.get(i));
                     list1.add(course.get(i));
                     middleOk = true;
-
-
-
                 }
             }
+            //지도에 동그라미 그려주는 부분
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < course.size(); i++) {
+                        if (i == 0) {
+                            page3_svg.loadUrl("javascript:setMessage('" + course.get(i) + "' , '1')");
+                        } else {
+                            page3_svg.loadUrl("javascript:setMessage('" + course.get(i) + "' , '2')");
+                        }
+                    }
+                }
+            }, 300);
         }
 
         if (course2!=null) {
@@ -529,11 +685,21 @@ public class Page3_Main extends AppCompatActivity {
                     mTagContainerLayout1.addTag(course2.get(i));
                     list1.add(course2.get(i));
                     middleOk = true;
-
-
-
                 }
             }
+            //지도에 동그라미 그려주는 부분
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < course2.size(); i++) {
+                        if (i == 0) {
+                            page3_svg.loadUrl("javascript:setMessage('" + course2.get(i) + "' , '1')");
+                        } else {
+                            page3_svg.loadUrl("javascript:setMessage('" + course2.get(i) + "' , '2')");
+                        }
+                    }
+                }
+            }, 300);
         }
 
         if (items3!=null) {
@@ -555,6 +721,19 @@ public class Page3_Main extends AppCompatActivity {
 
                 }
             }
+            //지도에 동그라미 그려주는 부분
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < items3.size(); i++) {
+                        if (i == 0) {
+                            page3_svg.loadUrl("javascript:setMessage('" + items3.get(i) + "' , '1')");
+                        } else  {
+                            page3_svg.loadUrl("javascript:setMessage('" + items3.get(i) + "' , '2')");
+                        }
+                    }
+                }
+            }, 300);
         }
 
         //page1 intent 부분
@@ -582,8 +761,37 @@ public class Page3_Main extends AppCompatActivity {
                     endOk = true;
                 }
             }
+            //지도에 동그라미 그려주는 부분
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < stationFromDB.size(); i++) {
+                        if (i == 0) {
+                            page3_svg.loadUrl("javascript:setMessage('" + stationFromDB.get(i).trim() + "' , '1')");
+                        } else if(i < stationFromDB.size()-1) {
+                            page3_svg.loadUrl("javascript:setMessage('" + stationFromDB.get(i) + "' , '2')");
+                        }  else {
+                            page3_svg.loadUrl("javascript:setMessage('" + stationFromDB.get(i) + "' , '3')");
+                        }
+                    }
+                }
+            }, 300);
         }
 
+        //지도에서 역 누르면 태그뷰에 추가되는 부분-----------------------------여기추가
+                page3_svg.addJavascriptInterface(new Object(){
+                    @JavascriptInterface
+                    public void send(final String msg) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    page3_svg.zoomBy(0.1f);
+                                }
+                            }
+                        });
+            }
+                }, "android2");
 
 
 
@@ -748,14 +956,6 @@ public class Page3_Main extends AppCompatActivity {
     }
 
 
-    //화면이 꺼지면 리스트를 삭제
-    @Override
-    protected void onPause() {
-        super.onPause();
-        send_list.clear();
-    }
-
-
     //선택된 날짜를 적용
     private void updateLabel() {
 
@@ -775,6 +975,7 @@ public class Page3_Main extends AppCompatActivity {
         set_day.setText(t_day);
 
     }
+
 
 
     //경유 추가하는데 자리가 없으면 없다고 다이얼로그 띄움
@@ -850,11 +1051,199 @@ public class Page3_Main extends AppCompatActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0,0);
     }
+
+
+    public void showLikeDB() {
+        Cursor likeCursor = mLikeDpOpenHelper.selectColumns();
+        Log.d("showLikeDB", "DB Size : " + likeCursor.getCount());
+
+        while (likeCursor.moveToNext()) {
+            String tempLike = likeCursor.getString(likeCursor.getColumnIndex("userid"));
+            String tempNickname = likeCursor.getString(likeCursor.getColumnIndex("nickname"));
+            String tempSub = likeCursor.getString(likeCursor.getColumnIndex("sub"));
+            like = tempLike;
+            nickName = tempNickname;
+            sub = tempSub;
+            Log.d("nickkkk",nickName);
+        }
+
+        menu_text1.setText(sub);
+        menu_text2.setText(nickName);
+
+        // DB에 값이 있다면
+        if (like != null) {
+            // mScore에 일단 값을 쪼개서 저장하고
+            mScore = like.split(" ");
+//            Log.i("mScore", like);
+            for (int i = 0 ; i < mScore.length ; i++) {
+//                Log.i("mScore", mScore[i]);
+                score[i] = Integer.parseInt(mScore[i]); // Int로 캐스팅
+//                Log.i("score", String.valueOf(score[i]));
+            }
+
+            if (score[2] == 0 && score[3] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_ant);
+            }
+
+            if (score[2] == 1 && score[3] == 1) {
+                menu_img.setBackgroundResource(R.drawable.ic_sloth);
+            }
+
+            if (score[2] != score[3]) {
+                if (score[6] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_otter);
+                } else if (score[2] == 1 ) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_soul);
+
+                } else if (score[2] == 0) {
+
+                    menu_img.setBackgroundResource(R.drawable.ic_excel);
+
+                }
+            }
+
+            if (score[1] == 0) {
+                if (score[4] == 0 && score[5] == 1) {
+                    menu_img.setBackgroundResource(R.drawable.ic_sprout);
+                }
+                else if (score[4] == 1&&score[5] == 0) {
+                    menu_img.setBackgroundResource(R.drawable.ic_chick);
+
+                }
+            }
+
+            if (score[1] == 4&&score[5] == 0) {
+                menu_img.setBackgroundResource(R.drawable.ic_chick);
+            }
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("result");
+                //String result2 = data.getStringExtra("result2");
+                menu_text2.setText(result);
+                nickName = result;
+                //db_nickName = nickName;
+
+            }
+        }
+    }
+
+
+    public void notity_listner(String sort){
+        Cursor iCursor = menu_dbOpenHelper.selectColumns();
+
+        while(iCursor.moveToNext()){
+            String  id = iCursor.getString(iCursor.getColumnIndex("userid"));
+            Log.i("갑자기 왜 안돼", String.valueOf(iCursor.getCount()) + "/" + id);
+            onoff.add(id);
+        }
+
+        //최초 실행을 위함
+        if(iCursor.getCount() == 0){
+            menu_dbOpenHelper.insertColumn("true", "0");
+            onoff.add("true");
+        }
+    }
+
+
+    /*위치&알림 스위치 버튼 관련***********************************************************************************************/
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        super.onPause();
+        send_list.clear();
+    }
+
+
+    @Override
+    protected void onStop() {
+        if (mBound) {
+            unbindService(mServiceConnection);
+            mBound = false;
+        }
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+
+    //위치 스위치 상태
+    private void setButtonsState(boolean requestingLocationUpdates ) {
+        if (requestingLocationUpdates) {
+            positionBtn.setChecked(true);
+        } else if( !requestingLocationUpdates){
+            positionBtn.setChecked(false);
+        }
+    }
+
+
+
+    //알림 스위치 상태
+    private void setButtonsState_notity() {
+        if (onoff.get(0).equals("true")) {
+            alramBtn.setChecked(true);
+        } else {
+            alramBtn.setChecked(false);
+        }
+
+    }
+
+
+
+    //포그라운드와 연결 ( 핸드폰 껐을 때도 돌아가도록 하는 부분)
+    private class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
+            if (location != null) {
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    }
+
+
 
 
 }

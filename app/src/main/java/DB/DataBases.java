@@ -22,8 +22,8 @@ public final class DataBases {
                 +USERID+" text not null , "
                 +NAME+" text not null , "
                 +CITYNAME+" text not null ,"
-                +TYPE+" text not null , "
-                +IMAGE+" text not null , "
+                +TYPE+" text , "
+                +IMAGE+" text , "
                 +CLICK+" text  not null ); ";
     }
 }

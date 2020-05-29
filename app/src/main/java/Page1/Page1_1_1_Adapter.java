@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DB.DbOpenHelper;
+import Page2.Recycler_item;
 import Page2_1_1.OnItemClick;
+import Page2_1_X.Page2_1_X;
 import Page2_X.Page2_X_CategoryBottom;
 
 public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.ViewHolder> implements OnItemClick {
@@ -41,6 +43,8 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
     // 어댑터에 들어갈 리스트
     private ArrayList<String > listData;
     private Context context;
+
+    String cityName;
 
 
     // 아이템 클릭상태 저장
@@ -69,16 +73,6 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        if(isFirst) {
-            if(position==0){
-
-                selectedItems.put(position, true);
-                prePosition = position;
-            }
-            else{
-                isFirst = false;
-            }
-        }
 
         listForSecond.clear();
 
@@ -91,11 +85,12 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
         //리사이클러뷰 넣는 부분
         holder.recyclerView.setLayoutManager( new LinearLayoutManager(context));
         adapter = new Page1_1_1_SecondAdapter(items , this);
+        adapter = new Page1_1_1_SecondAdapter(listForSecond , this);
         holder.recyclerView.setAdapter(adapter);
         holder.cityCount.setText("" + listForSecond.size());
 
         holder.onBind(position);
-        holder.textView1.setText(listData.get(position));
+        holder.textView1.setText(listData.get(position)+"역");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +112,7 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
                 prePosition = position;
             }
         });
+
     }
 
     @Override
@@ -191,10 +187,17 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //관심관광지 페이지로 감
-                Intent intent = new Intent(context, Page1_1_1.class);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                if (listForSecond.size() == 0) {
+                    //관심관광지 페이지로 감
+                    Intent intent = new Intent(context, Page1_1_0.class);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } else {
+                    //관심관광지 페이지로 감
+                    Intent intent = new Intent(context, Page1_1_0.class);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {

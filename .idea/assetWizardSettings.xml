@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_sprout" />
-                            <entry key="sourceFile" value="C:\android_capston\character\sprout.svg" />
+                            <entry key="outputName" value="ic_main2" />
+                            <entry key="sourceFile" value="C:\android_capston\main2.svg" />
                           </map>
                         </option>
                       </PersistentState>

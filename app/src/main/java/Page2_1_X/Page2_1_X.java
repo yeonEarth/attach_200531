@@ -15,6 +15,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -136,6 +137,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         image = intent.getStringExtra("image");
         cityName = intent.getStringExtra("cityname");
 
+
         url_code();
 
         title.setText(spot_title);
@@ -146,6 +148,9 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         add_btn = (Button) findViewById(R.id.page2_1_1_like);
 
         click = mCallBack.isClick(contentID);
+        if (click == null) {
+            click = "";
+        }
         if (click.equals(contentID)) {
             buttonState = true;
             add_btn.setBackgroundResource(R.drawable.ic_icon_add_float_2);
@@ -177,7 +182,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         // 맵뷰 구현
         mapView = new MapView(this);
         RelativeLayout mapViewContainer = (RelativeLayout)findViewById(R.id.page2_1_1_map);
-        mapViewContainer.addView(mapView);
+        mapViewContainer.addView(mapView,0);
 //        mapView.setClickable(true);
         marker = new MapPOIItem();
 
@@ -997,4 +1002,13 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
             return returnResult;
         }
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((ViewGroup)mapView.getParent()).removeView(mapView);
+    }
+
+
 }

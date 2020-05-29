@@ -28,6 +28,8 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
     Second_RecyclerviewAdapater adapter;
     private List<String> real_items = new ArrayList<String>();
 
+    private int mySpotSize;
+
     // adapter에 들어갈 list 입니다.
     private ArrayList<String> listData;
     private Context context;
@@ -40,9 +42,10 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
     private boolean isFirst = true;
 
 
-    public Main_RecyclerviewAdapter(ArrayList<String> data, Context context){
+    public Main_RecyclerviewAdapter(ArrayList<String> data, Context context, int mySpotSize){
         this.listData = data;
         this.context = context;
+        this.mySpotSize = mySpotSize;
     }
 
     @Override
@@ -84,7 +87,7 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
 
 
         //어댑터 연결
-        adapter = new Second_RecyclerviewAdapater(context, real_items);
+        adapter = new Second_RecyclerviewAdapater(context, real_items, mySpotSize);
         viewHolder.recyclerView.setLayoutManager( new LinearLayoutManager(context));
         viewHolder.recyclerView.setAdapter(adapter);
 
