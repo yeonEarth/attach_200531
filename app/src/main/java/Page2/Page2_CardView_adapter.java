@@ -109,6 +109,8 @@ public class Page2_CardView_adapter extends RecyclerView.Adapter<Page2_CardView_
                     intent.putExtra("contenttypeid", item.getType());
                     intent.putExtra("image", item.getImage());
                     intent.putExtra("cityname", cityName);
+                    intent.putExtra("areaCode", item.getAreaCode());
+                    intent.putExtra("sigunguCode", item.getSigunguCode());
                     context.startActivity(intent);
                 }
             }

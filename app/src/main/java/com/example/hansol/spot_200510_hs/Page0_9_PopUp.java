@@ -1,6 +1,7 @@
 package com.example.hansol.spot_200510_hs;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +19,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import DB.Like_DbOpenHelper;
+
 public class Page0_9_PopUp extends AppCompatActivity {
     LinearLayout linearLayout;
 
@@ -26,12 +32,13 @@ public class Page0_9_PopUp extends AppCompatActivity {
     EditText nickName;
     ImageView profile;
 
-    String name, sub, editName;
+    String name, sub, editName, fav;
 
     int[] score = new int[8];
 
     // 키보드 내릴때
     InputMethodManager keyboard;
+    private Like_DbOpenHelper mDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,10 @@ public class Page0_9_PopUp extends AppCompatActivity {
 
         linearLayout.setOnClickListener(listener);
 
+        mDbOpenHelper = new Like_DbOpenHelper(Page0_9_PopUp.this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
+
         Intent intent = getIntent();
         name = intent.getStringExtra("닉네임");
         sub = intent.getStringExtra("서브이름");
@@ -56,6 +67,12 @@ public class Page0_9_PopUp extends AppCompatActivity {
         // 앞에서 받아온 걸로 적용
         nickName.setText(name);
         subTitle.setText(sub);
+
+        //앞에서 받아온 스코엉어를 스트링으로
+        for (int i = 0 ; i < score.length -1  ; i++) {
+            fav += score[i] + " ";
+        }
+
 
         //메뉴 사진
         if (score[2] == 0 && score[3] == 0) {
@@ -139,6 +156,12 @@ public class Page0_9_PopUp extends AppCompatActivity {
         check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+Log.i("왜 안되지? ", fav);
+                mDbOpenHelper.open();
+                mDbOpenHelper.deleteAllColumns();
+                mDbOpenHelper.insertLikeColumn(fav.replaceAll("null",""), editName, sub);
+                mDbOpenHelper.close();
+
                 // 공백 체크
                 if (nickName.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();

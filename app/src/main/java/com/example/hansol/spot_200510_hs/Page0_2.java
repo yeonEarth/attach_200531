@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import DB.Like_DbOpenHelper;
 import Page1.Page1;
 
 public class Page0_2 extends AppCompatActivity implements View.OnClickListener {
@@ -21,10 +22,16 @@ public class Page0_2 extends AppCompatActivity implements View.OnClickListener {
 
     int[] score = new int[8];
 
+    private Like_DbOpenHelper mDbOpenHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page0_1);
+
+        mDbOpenHelper = new Like_DbOpenHelper(Page0_2.this);
+        mDbOpenHelper.open();
+        mDbOpenHelper.create();
 
 
         a1_alone = (TextView)findViewById(R.id.page0_2_a1);
@@ -44,6 +51,12 @@ public class Page0_2 extends AppCompatActivity implements View.OnClickListener {
         page2_later_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mDbOpenHelper.open();
+                mDbOpenHelper.deleteAllColumns();
+                mDbOpenHelper.insertLikeColumn("0 3 0 0 1 0 0 0", "열정 개미", "자연속에서 힐링하기 좋아하는");
+                mDbOpenHelper.close();
+
                 score[1] = 3; score[4] = 1; score[5] = 0;
                 Intent intent = new Intent(Page0_2.this, Page1.class);
                 intent.putExtra("Main", score);

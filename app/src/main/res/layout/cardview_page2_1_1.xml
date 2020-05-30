@@ -63,7 +63,8 @@
                     android:layout_weight="4"
                     android:gravity="top"
                     android:text="경복궁"
-                    android:textAppearance="@style/cardview_titleText2"/>
+                    android:textAppearance="@style/cardview_titleText2"
+                    android:ellipsize="end"/>
             </LinearLayout>
 
             //하트

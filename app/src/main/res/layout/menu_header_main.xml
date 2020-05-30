@@ -26,7 +26,7 @@
             android:layout_marginRight="10dp"
             android:elevation="4dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_otter_line"/>
+            android:background="@drawable/ic_ant"/>
 
         // 캐릭터 설명 레이아웃
         <RelativeLayout

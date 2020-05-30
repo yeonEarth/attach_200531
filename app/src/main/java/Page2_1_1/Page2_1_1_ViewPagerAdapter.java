@@ -64,7 +64,7 @@ public class Page2_1_1_ViewPagerAdapter extends RecyclerView.Adapter<Page2_1_1_V
     }
 
     @Override
-    public void onBindViewHolder(Page2_1_1_ViewPagerAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final Page2_1_1_ViewPagerAdapter.ViewHolder holder, final int position) {
         // 앞에서 받아온 값이랑 position이 같으면 펼치기
         if (numCourse == 1 && isFirst) {
             //height 값을 임의로 준다.
@@ -152,7 +152,7 @@ public class Page2_1_1_ViewPagerAdapter extends RecyclerView.Adapter<Page2_1_1_V
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                holder.btn.setClickable(false);
                 /*
                  * (true = 화면이 보이는 상태) -> 화면을 지워준다.
                  * 'delete' 를 프래그먼트에 전달하면 API를 실행하지 않는다.

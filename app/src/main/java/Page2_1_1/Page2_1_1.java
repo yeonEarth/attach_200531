@@ -75,10 +75,10 @@ public class Page2_1_1 extends AppCompatActivity {
     private void getData() {
         switch (getSubject) {
             case "자연":
-                st1 = new String[]{"횡성", "여수", "제천"};
+                st1 = new String[]{"양평", "여수", "제천"};
                 st2 = new String[]{"강릉", "남원", "경주"};
                 st3 = new String[]{"동해", "임실", "포항"};
-                st4 = new String[]{"삼척", "군산", "영덕"};
+                st4 = new String[]{"태백", "군산", "영덕"};
                 break;
             case "역사":
                 st1 = new String[]{"광주", "전주", "나주", "경주", "제천"};
@@ -93,7 +93,7 @@ public class Page2_1_1 extends AppCompatActivity {
                 st4 = new String[]{"여수", "고양", "서울"};
                 break;
             case "체험":
-                st1 = new String[]{"익산", "곡성", "의정부"};
+                st1 = new String[]{"익산", "곡성", "서울"};
                 st2 = new String[]{"보성", "순천", "양평"};
                 st3 = new String[]{"광양", "광양", "강릉"};
                 st4 = new String[]{"순천", "논산", "보성"};
@@ -117,10 +117,10 @@ public class Page2_1_1 extends AppCompatActivity {
                 st4 = new String[]{"청주", "대구"};
                 break;
             case "레포츠":
-                st1 = new String[]{"남양주", "서울"};
-                st2 = new String[]{"평창", "남양주"};
-                st3 = new String[]{"횡성", "광명"};
-                st4 = new String[]{"성남", "가평"};
+                st1 = new String[]{"덕소", "서울"};
+                st2 = new String[]{"평창", "덕소"};
+                st3 = new String[]{"영주", "광명"};
+                st4 = new String[]{"안동", "가평"};
                 break;
             default:
                 break;

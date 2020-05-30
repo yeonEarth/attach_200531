@@ -367,6 +367,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             // 나중에 하기 버튼 눌렀을 때 임의의 값 넘겨주기
             if (intent.hasExtra("Main")) {
                 score = intent.getIntArrayExtra("Main");
+
+
             } else if (intent.hasExtra("Page9")) {
                 // 설문조사 진행 했을 때
                 score = intent.getIntArrayExtra("Page9");
@@ -874,7 +876,7 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         if (like != null) {
             // mScore에 일단 값을 쪼개서 저장하고
             mScore = like.split(" ");
-//            Log.i("mScore", like);
+            Log.i("mScore", like);
             for (int i = 0 ; i < mScore.length ; i++) {
 //                Log.i("mScore", mScore[i]);
                 score[i] = Integer.parseInt(mScore[i]); // Int로 캐스팅

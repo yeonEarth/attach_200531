@@ -48,6 +48,7 @@ import android.widget.Toast;
 import com.example.hansol.spot_200510_hs.R;
 import com.google.android.material.appbar.AppBarLayout;
 
+import net.daum.mf.map.api.MapLayout;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -369,7 +370,7 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
                         pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
 
                         //받아온 api 개수가 20개가 안되면 다음 페이지가 없다고 판단. false로 바꿔줌
-                        if(name_1.length < 5){
+                        if(name_1.length < 10){
                             isLoadData = false;
                         }
 
@@ -763,9 +764,9 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
             //시군구코드가 0 일 때와 0이 아닐때를 구분해서 url을 넣어준다.
             if(sigunguCode.equals("0")){
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+                        "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
                         "&pageNo=" + page +
-                        "&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
+                        "&numOfRows=10&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                         "&contentTypeId=" + contentTypeId +
                         "&sigunguCode=" +
                         "&areaCode=" + areaCode +
@@ -775,9 +776,9 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
                         "&listYN=Y";
             } else {
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+                        "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
                         "&pageNo=" + page +
-                        "&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
+                        "&numOfRows=10&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                         "&contentTypeId=" + contentTypeId +
                         "&sigunguCode=" + sigunguCode +
                         "&areaCode=" + areaCode +
@@ -918,6 +919,13 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
         ((ViewGroup)mapView.getParent()).removeView(mapView);
     }
 
+    // 현재 액티비티 새로고침
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 
 
 

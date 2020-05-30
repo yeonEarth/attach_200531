@@ -52,7 +52,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
     private String id;
 
     //역 이름을 받아서 지역코드랑 시군구코드 받기 위한 배열
-    int station_code = 49;
+    int station_code = 99;
     String[] arr_line = null;
     String[] _name = new String[station_code];           //txt에서 받은 역이름
     String[] _areaCode = new String[station_code];       //txt에서 받은 지역코드
@@ -297,7 +297,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //관심관광지 페이지로 감
-                Intent intent = new Intent(mainActivity, Heart_page.class);
+                Intent intent = new Intent(mainActivity, Page1_1_1.class);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -325,7 +325,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
             //시군구코드가 0 일 때와 0이 아닐때를 구분해서 url을 넣어준다.
             if(sigunguCode.equals("0")){
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+                        "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
                         "&pageNo=1&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                         "&contentTypeId=" + contentTypeId +
                         "&sigunguCode=" +
@@ -334,7 +334,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
                         "&listYN=Y";
             } else {
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+                        "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
                         "&pageNo=1&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                         "&contentTypeId=" + contentTypeId +
                         "&sigunguCode=" + sigunguCode +

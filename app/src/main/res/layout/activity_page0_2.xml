@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:clipToPadding="false"
-                android:padding="4dp">
+                android:paddingBottom="8dp">
                 // 도시/문화체험
                 <TextView
                     android:id="@+id/page0_3_a1"
@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:clipToPadding="false"
-                android:padding="4dp">
+                android:paddingBottom="8dp">
                 // 맛집 탐방
                 <TextView
                     android:id="@+id/page0_3_a3"

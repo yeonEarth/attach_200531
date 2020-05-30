@@ -288,8 +288,8 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         menu_dbOpenHelper.create();
         notity_listner("");
 
-        Intent intent2 = getIntent();
-        score = intent2.getIntArrayExtra("score");
+//        Intent intent2 = getIntent();
+//        score = intent2.getIntArrayExtra("score");
 
 
         // 취향파악 DB열기
@@ -538,6 +538,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
             }
             else {
                 url_code();
+                settingList();
                 settingAPI_Data();
                 //url에 들어갈 contentTypeId, cat1, cat2 코드를 찾기
 
@@ -567,7 +568,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
 
 
         //리사이클러뷰 연결
-        adapter = new Page2_CardView_adapter(cardview_items, mainActivity, "cityname", this);
+        adapter = new Page2_CardView_adapter(cardview_items, mainActivity, cityName, this);
         recyclerView.setAdapter(adapter);
 
         courseMore.setOnClickListener(new View.OnClickListener() {
@@ -658,7 +659,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
                         pastVisiblesItems = gridLayoutManager.findFirstVisibleItemPosition();
 
                         //받아온 api 개수가 20개가 안되면 다음 페이지가 없다고 판단. false로 바꿔줌
-                        if(name_1.length < 5){
+                        if(name_1.length < 10){
                             isLoadData = false;
                         }
 
@@ -730,7 +731,6 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         }
         return cityName;
     }
-
 
 
     private void settingAPI_Data() {
@@ -818,10 +818,10 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
     private void getData () {
         switch (subject) {
             case "자연":
-                st1 = new String[]{"횡성", "여수", "제천"};
+                st1 = new String[]{"양평", "여수", "제천"};
                 st2 = new String[]{"강릉", "남원", "경주"};
                 st3 = new String[]{"동해", "임실", "포항"};
-                st4 = new String[]{"삼척", "군산", "영덕"};
+                st4 = new String[]{"태백", "군산", "영덕"};
                 break;
             case "역사":
                 st1 = new String[]{"광주", "전주", "나주", "경주", "제천"};
@@ -836,7 +836,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
                 st4 = new String[]{"여수", "고양", "서울"};
                 break;
             case "체험":
-                st1 = new String[]{"익산", "곡성", "의정부"};
+                st1 = new String[]{"익산", "곡성", "서울"};
                 st2 = new String[]{"보성", "순천", "양평"};
                 st3 = new String[]{"광양", "광양", "강릉"};
                 st4 = new String[]{"순천", "논산", "보성"};
@@ -860,12 +860,11 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
                 st4 = new String[]{"청주", "대구"};
                 break;
             case "레포츠":
-                st1 = new String[]{"남양주", "서울"};
-                st2 = new String[]{"평창", "남양주"};
-                st3 = new String[]{"횡성", "광명"};
-                st4 = new String[]{"성남", "가평"};
+                st1 = new String[]{"덕소", "서울"};
+                st2 = new String[]{"평창", "덕소"};
+                st3 = new String[]{"영주", "광명"};
+                st4 = new String[]{"안동", "가평"};
                 break;
-
             case "음식점":
                 st1 = new String[]{"", ""};
                 st2 = new String[]{"", ""};
@@ -1081,9 +1080,9 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
             //Log.d("시작", "시작");
 
             url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                    "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+                    "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
                     "&pageNo=" + page+
-                    "&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
+                    "&numOfRows=10&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                     "&contentTypeId=" + contentTypeId +
                     "&sigunguCode=" +
                     "&areaCode="+
@@ -1215,9 +1214,9 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         if (like != null) {
             // mScore에 일단 값을 쪼개서 저장하고
             mScore = like.split(" ");
-//            Log.i("mScore", like);
+            Log.i("mScore", like);
             for (int i = 0 ; i < mScore.length ; i++) {
-//                Log.i("mScore", mScore[i]);
+                Log.i("mScore", mScore[i]);
                 score[i] = Integer.parseInt(mScore[i]); // Int로 캐스팅
 //                Log.i("score", String.valueOf(score[i]));
             }

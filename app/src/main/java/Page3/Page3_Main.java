@@ -488,10 +488,10 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
                 nestedScrollView.post(new Runnable() {
                     @Override
                     public void run() {
-                        autoCompleteTextView.setText("");
 
                         //키보드 올라와 있으면 작동 안함
-                        nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                        //nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                        autoCompleteTextView.setText("");
                     }
                 });
                 return false;
@@ -531,6 +531,7 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
+                page3_svg_bg.setSelected(true);
                 return false;
             }
         });

@@ -12,7 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hansol.spot_200510_hs.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class Page1_full_ScheduleAdapter1 extends  RecyclerView.Adapter<Page1_full_ScheduleAdapter1.ViewHolder> {
 
@@ -27,11 +33,12 @@ public class Page1_full_ScheduleAdapter1 extends  RecyclerView.Adapter<Page1_ful
     //전달할 값
     ArrayList<Page1_Main.RecycleItem> Day_items;
 
-
+    List<String> dateList;
 
     public Page1_full_ScheduleAdapter1(ArrayList<Page1_Main.RecycleItem> All_items, int dayNumber ){
         this.All_items = All_items;
         this.dayNumber = dayNumber;
+
     }
 
     @Override
@@ -46,13 +53,34 @@ public class Page1_full_ScheduleAdapter1 extends  RecyclerView.Adapter<Page1_ful
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 
         //출발 날짜 받기
+        dateList = new ArrayList<>();
         Day_items = new ArrayList<Page1_Main.RecycleItem>();
-        int date = Integer.parseInt(All_items.get(0).date);
+
+        //날짜 리스트
+        dateList.clear();
+        String date = All_items.get(0).date;
+        dateList.add(date);
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date date_format = null;
+        try {
+            date_format = dateFormat.parse(String.valueOf(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date_format);
+
+        for(int b = 1; b < dayNumber; b++){
+            calendar.add(Calendar.DATE, 1);
+            dateList.add(dateFormat.format(calendar.getTime()));
+        }
+
         for(int i =0; i < All_items.size(); i++){
-            if(All_items.get(i).date.equals(String.valueOf(date+position))){
+            if(All_items.get(i).date.equals(dateList.get(position))){
                 Day_items.add(All_items.get(i));
             }
         }
+
 
         //데이터가 없으면
         if(Day_items.size() < 2){

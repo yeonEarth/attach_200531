@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -75,6 +79,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
     String type, cat1, cat2 = "";    // 앞에서 받아온 타입 저장
     String contentTypeId;   // 아이디로 저장
     ImageView back_btn;
+    String areaCode, sigunguCode;
 
     boolean isExpand = false;
 
@@ -82,9 +87,19 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
     MapView mapView;
 
     ScrollView scrollView;
+    ViewGroup mapViewContainer;
 
     Page2_1_X_RecyclerViewAdapter adapter;
     private ArrayList<Page2_1_X_RecyclerViewAdapter.Detail_item> items = new ArrayList<>(); // 어댑터로 넘길 값
+
+    //txt 분류 관련
+    int station_code = 300;
+    String[] arr_line = null;
+    String[] _name = new String[station_code];           //txt에서 받은 역이름
+    String[] _areaCode = new String[station_code];       //txt에서 받은 지역코드
+    String[] _sigunguCode = new String[station_code];    //txt에서 받은 시군구코드
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +113,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
 
         scrollView = (ScrollView)findViewById(R.id.page2_1_x_scrollView);
         scrollView.smoothScrollBy(0,0);
+        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
 
         back_btn = (ImageView) findViewById(R.id.page2_1_x_back_btn);
 
@@ -136,6 +152,8 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         type = intent.getStringExtra("contenttypeid");
         image = intent.getStringExtra("image");
         cityName = intent.getStringExtra("cityname");
+        areaCode = intent.getStringExtra("areaCode");
+        sigunguCode = intent.getStringExtra("sigunguCode");
 
 
         url_code();
@@ -170,6 +188,11 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
                     Toast.makeText(getApplicationContext(),"관심관광지를 취소했습니다",Toast.LENGTH_SHORT).show();
                 } else {
                     // 버튼 처음 누를 때
+                    // 버튼 처음 누를 때
+                    if(cityName.equals("cityname")){
+                        cityName = compareStation(areaCode, sigunguCode);
+                    }
+
                     buttonState = true;
                     add_btn.setBackgroundResource(R.drawable.ic_icon_add_float_2);
                     mCallBack.make_db(contentID, spot_title, cityName, type, image, "1");   //countId랑 title을 db에 넣으려고 함( make_db라는 인터페이스 이용)
@@ -531,7 +554,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //관심관광지 페이지로 감
-                Intent intent = new Intent(getApplicationContext(), Heart_page.class);
+                Intent intent = new Intent(getApplicationContext(), Page1_1_1.class);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -1003,11 +1026,56 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         }
     }
 
+    // 현재 액티비티 새로고침
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
 
     @Override
     protected void onPause() {
         super.onPause();
         ((ViewGroup)mapView.getParent()).removeView(mapView);
+    }
+
+
+    //txt 돌려 역 비교할 배열 만들기(이름 지역코드 동네코드)<-로 구성
+    private void settingList(){
+        String readStr = "";
+        AssetManager assetManager = getResources().getAssets();
+        InputStream inputStream = null;
+        try{
+            inputStream = assetManager.open("station_code.txt");
+            //버퍼리더에 대한 설명 참고 : https://coding-factory.tistory.com/251
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String str = null;
+            while (((str = reader.readLine()) != null)){ readStr += str + "\n";}
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String[] arr_all = readStr.split("\n"); //txt 내용을 줄바꿈 기준으로 나눈다.
+
+        //한 줄의 값을 띄어쓰기 기준으로 나눠서, 역명/지역코드/시군구코드 배열에 넣는다.
+        for(int i=0; i <arr_all.length; i++) {
+            arr_line = arr_all[i].split(" ");
+
+            _name[i] = arr_line[0];         //서울
+            _areaCode[i] = arr_line[1];     //1
+            _sigunguCode[i] = arr_line[2];  //0
+        }
+    }
+
+    private String compareStation(String area, String sigunguCode){
+        for(int p = 0; p < 233; p ++){
+            if(_sigunguCode[p].trim().equals(sigunguCode) && _areaCode[p].trim().equals(area)){
+                cityName = _name[p];
+            }
+        }
+        return cityName;
     }
 
 
