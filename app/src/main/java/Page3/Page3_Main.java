@@ -75,6 +75,7 @@ import DB.DbOpenHelper;
 import DB.Like_DbOpenHelper;
 import DB.Menu_DbOpenHelper;
 import DB.Page3_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
 import Page1.Page1;
@@ -207,6 +208,9 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
     // 찜한 여행지 저장하는 리스트
     private ArrayList<String > mySpot = new ArrayList<String >();
 
+    //등록한 일정 관련
+    private Second_MainDBHelper second_mainDBHelper;
+    private String second_key = "";
 
 
     @Override
@@ -225,6 +229,12 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
         page3_dbOpenHelper = new Page3_DbOpenHelper(this);
         page3_dbOpenHelper.open();
         page3_dbOpenHelper.create();
+
+        //데베 관련
+        second_mainDBHelper = new Second_MainDBHelper(this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
+
 
         Intent intent3 = getIntent();
         items3 = (ArrayList<String>)intent3.getSerializableExtra("items3") ;
@@ -324,10 +334,19 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
         showLikeDB();
 
 
+        //등록된 일정이 있는지 검사
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size());
+        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size(), second_key);
         recyclerView1.setAdapter(adapter2);
+
+
 
         //리사이클러뷰 헤더
         name2.add("0");

@@ -280,7 +280,7 @@ public class LocationUpdatesService extends Service {
                     .setOngoing(true)
                     .setContentText("현재 위치 찾는 중...")
                     .setContentTitle("내로라")
-                    .setSmallIcon(R.drawable.ic_heart_on)
+                    .setSmallIcon(R.drawable.ic_bar_icon_0531)
                     .setDefaults(Notification.DEFAULT_LIGHTS)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground)) //BitMap 이미지 요구
                     .setWhen(System.currentTimeMillis());
@@ -296,7 +296,7 @@ public class LocationUpdatesService extends Service {
                     .setOngoing(true)
                     .setPriority(Notification.PRIORITY_HIGH)
                      .setDefaults(Notification.DEFAULT_SOUND)
-                     .setSmallIcon(R.drawable.ic_heart_on)
+                     .setSmallIcon(R.drawable.ic_bar_icon_0531)
                     .setTicker(text)
                     .setWhen(System.currentTimeMillis());
         }

@@ -41,6 +41,7 @@ import java.util.List;
 import DB.DbOpenHelper;
 import DB.Like_DbOpenHelper;
 import DB.Menu_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import Page1_schedule.LocationUpdatesService;
 import Page1_schedule.Location_Utils;
 import Page2.Page2;
@@ -121,6 +122,9 @@ public class Page1_1_1 extends AppCompatActivity implements SharedPreferences.On
         }
     };
 
+    //등록한 일정 관련
+    private Second_MainDBHelper second_mainDBHelper;
+    private String second_key = "";
 
 
 
@@ -165,6 +169,11 @@ public class Page1_1_1 extends AppCompatActivity implements SharedPreferences.On
         menu_dbOpenHelper.open();
         menu_dbOpenHelper.create();
         notity_listner("");
+
+        //데베 관련
+        second_mainDBHelper = new Second_MainDBHelper(this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
 
 
         //위치 스위치 관련
@@ -227,10 +236,18 @@ public class Page1_1_1 extends AppCompatActivity implements SharedPreferences.On
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
+        //등록된 일정이 있는지 검사
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size());
+        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size(), second_key);
         recyclerView1.setAdapter(adapter2);
+
 
         //리사이클러뷰 헤더
         name2.add("0");

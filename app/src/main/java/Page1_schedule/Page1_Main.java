@@ -116,7 +116,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
 
     //뷰페이저 관련
     boolean pastTime;
-    boolean forTime;
+    boolean forTime = true;
     ViewPager viewPager;
     PagerAdapter pagerAdapter;
     PageIndicatorView pageIndicatorView;
@@ -233,6 +233,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
 
     //일정 등록 후 나올 메인페이지 관련
     private Second_MainDBHelper second_mainDBHelper;
+    private String second_key = "";
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -291,12 +292,12 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         spotDbOpenHelper.create();
         showDatabase();
 
-        // DB열기
+        //저장한 일정 DB열기
         second_mainDBHelper = new Second_MainDBHelper(this);
         second_mainDBHelper.open();
         second_mainDBHelper.create();
 
-
+        //메뉴 DB열기
         menu_dbOpenHelper = new Menu_DbOpenHelper(this);
         menu_dbOpenHelper.open();
         menu_dbOpenHelper.create();
@@ -361,15 +362,9 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
-        //메뉴 안 내용 구성
-        recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size());
-        recyclerView1.setAdapter(adapter2);
 
-        //리사이클러뷰 헤더
-        name2.add("0");
-        name2.add("1");
-        name2.add("2");
+
+
 
         //툴바 타이틀 없애기
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -405,7 +400,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         });
 
         completeList= new ArrayList<Api_Item>();
-        pagerAdapter = new Page1_pagerAdapter(this, this, arrayLocal, this);
+
 
         //page3_1_1_1_1 에서 일정저장하기 누를때 받아옴
         Intent get = getIntent();
@@ -418,10 +413,22 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
             String  id = iCursor.getString(iCursor.getColumnIndex("userid"));
             check_SecondPage = id;
         }
-        Log.i("뭐야123", db_key+"-"+check_SecondPage);
+
         if(!db_key.equals(check_SecondPage) ){
             setSecondMain();
         }
+
+
+        //메뉴 안 내용 구성
+        recyclerView1.setLayoutManager(new LinearLayoutManager(this));
+        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size(), check_SecondPage);
+        recyclerView1.setAdapter(adapter2);
+
+        //리사이클러뷰 헤더
+        name2.add("0");
+        name2.add("1");
+        name2.add("2");
+
 
 
         // 현재 날짜 출력
@@ -454,7 +461,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
 
         //데이터베이스에 있는 값을 리스트에 추가
         getDatabase(db_key);
-
+        Log.i("아오 ", db_key);
 
 
         //출발 날짜(디데이 계산)
@@ -490,7 +497,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
                 stationWithTransfer.add(db_data.get(i).date+","+db_data.get(i).text_shadow);
             }
         }
-
+        Log.i("아오22 ", String.valueOf(stationWithTransfer.size()));
         //출발, 경유, 도착역
         for(int i =0; i < station.size(); i++){
             String station_split[] = station.get(i).split(",");
@@ -545,14 +552,16 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
 
 
         //현재시간 기준 또는 지도위치 기준 뷰페이져 포커스 이동
-        if(gotData == -1){ forTime = true; }
-        else {forTime = false; }
+//        if(gotData == -1){ forTime = true; }
+//        else {forTime = false; }
+
         if(forTime) {
 
             //데이터 초기화
             Day_items.clear();
             completeList.clear();
             getPosition.clear();
+
 
             for (int i = 0; i < stationWithTransfer.size(); i++) {
                 //현재 날짜와 같은 일정을 찾고  && 지도에서 값을 받지 못했으면
@@ -597,9 +606,13 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
                     }, 500);
                     break;
                 }
+
+                else {
+                    getPosition.add(0);
+                }
             }
         }
-
+        pagerAdapter = new Page1_pagerAdapter(this, this, arrayLocal, this);
         viewPager.setAdapter(pagerAdapter);
         pageIndicatorView.setCount(arrayLocal.size());
 
@@ -968,9 +981,8 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
             showDialogForLocationServiceSetting();
         } else if (!checkPermissions()) {
             requestPermissions();
-            Toast.makeText(getApplicationContext(), "한번 더 눌러주세요.", Toast.LENGTH_LONG).show();
-        } else
-        {
+            Toast.makeText(getApplicationContext(), "시작 버튼을 한번 더 눌러주세요.", Toast.LENGTH_LONG).show();
+        } else {
             //포그라운드로 도시,날짜,데베키를 보냄
             mService.getData(arrayLocal);
             mService.getDate(startDate);
@@ -1172,19 +1184,20 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         db_key = intent.getStringExtra("key");
 
         if(gotData!=-1){
+            Log.i("갓데이터 왜 오류나", String.valueOf(gotData));
             forTime = false;
             //데이터 초기화
             Day_items.clear();
             completeList.clear();
             getPosition.clear();
 
-            Day_schedule_data(stationWithTransfer.get(gotData));
+            Day_schedule_data(stationWithTransfer.get(gotData-1));
             if (isNetworkConnect != 3) {
-                send_Api(stationWithTransfer.get(gotData));
+                send_Api(stationWithTransfer.get(gotData-1));
             }
             err_message();
             startStation.setText(arrayLocal.get(gotData));
-            endStation.setText(arrayLocal.get(gotData + 1));
+            endStation.setText(arrayLocal.get(gotData ));
             getPosition.add(gotData);
             handler.postDelayed(new Runnable() {
                 @Override
@@ -1398,7 +1411,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
     }
 
     public void setSecondMain() {
-        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Page1_Main.this);
         builder.setMessage("이 일정을 메인 일정으로 정할까요?");
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
@@ -1498,6 +1511,13 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         }
     }
 
+    // 현재 액티비티 새로고침
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
 
 }
 

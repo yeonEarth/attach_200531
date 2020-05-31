@@ -11,23 +11,39 @@
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/page3_1_1_1_dragLine"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginRight="8dp">
 
-            //앞에 원
-            <TextView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="1dp"
-                android:background="@drawable/circle"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:text="01"
-                android:textSize="15sp"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/notosans"/>
+            //리스트를 드래그 하게 해주는 작대기 3개
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="23dp"
+                    android:layout_height="3dp"
+                    android:background="@drawable/ic_line_11"/>
+
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="23dp"
+                    android:layout_height="3dp"
+                    android:background="@drawable/ic_line_11"
+                    android:layout_marginTop="7dp"/>
+
+                <View
+                    android:id="@+id/line3"
+                    android:layout_width="23dp"
+                    android:layout_height="3dp"
+                    android:background="@drawable/ic_line_11"
+                    android:layout_marginTop="14dp"/>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

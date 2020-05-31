@@ -256,11 +256,11 @@
             //열차 시간표가 없을 때
             <TextView
                 android:id="@+id/page1_timeTable_noData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_below="@id/table_line"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
+                android:gravity="center"
+                android:layout_marginBottom="10dp"
                 android:text="@string/train_err_internet"/>
 
             //지난 일정일 때

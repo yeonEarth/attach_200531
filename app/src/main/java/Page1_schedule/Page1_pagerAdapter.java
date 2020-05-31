@@ -113,10 +113,16 @@ public class Page1_pagerAdapter extends PagerAdapter {
 
             //현재역이면
             else if(position == gotPosition){
+                if(position < localArray.size()-1) {
+                    checkIn_btn.setText("여행중");
+                    next_station.setVisibility(View.VISIBLE);
+                } else{
+                    checkIn_btn.setText("여행완료");
+                    next_station.setVisibility(View.INVISIBLE);
+                }
                 pre_station.setVisibility(View.VISIBLE);
-                next_station.setVisibility(View.VISIBLE);
+                pre_station.setText("< 이전역");
                 now_station.setVisibility(View.VISIBLE);
-                checkIn_btn.setText("여행중");
                 checkIn_btn.setSelected(true);
                 checkIn_btn.setTextColor(Color.parseColor("#FFFEFE"));
                 page1_pager_layout.setBackgroundResource(R.drawable.rectangle4);

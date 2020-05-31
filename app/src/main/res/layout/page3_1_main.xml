@@ -64,7 +64,7 @@
             android:layout_below="@+id/shortest_txt"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
-            android:text="슈니 님이 선택한 도시의 최단 경로입니다."
+            android:text="선택한 도시의 최단 경로입니다."
             android:textSize="16dp"
             android:textColor="#000000"
             android:letterSpacing="-0.03"

@@ -23,7 +23,7 @@
                 android:id="@+id/page4_2_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_bg_02beach"/>
+                android:background="@drawable/ic_my_bg1"/>
 
             //이미지 그림자
             <ImageView

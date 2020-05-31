@@ -53,6 +53,7 @@ import java.util.List;
 import DB.DbOpenHelper;
 import DB.Like_DbOpenHelper;
 import DB.Menu_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
 import Page1_schedule.LocationUpdatesService;
@@ -151,6 +152,11 @@ public class Page3_1_1_Main extends AppCompatActivity implements SharedPreferenc
         }
     };
 
+    //등록한 일정 관련
+    private Second_MainDBHelper second_mainDBHelper;
+    private String second_key = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +235,11 @@ public class Page3_1_1_Main extends AppCompatActivity implements SharedPreferenc
         mLikeDpOpenHelper.create();
         showLikeDB();
 
+        //데베 관련
+        second_mainDBHelper = new Second_MainDBHelper(this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
+
 
         //위치 스위치 관련
         myReceiver = new MyReceiver();
@@ -289,9 +300,16 @@ public class Page3_1_1_Main extends AppCompatActivity implements SharedPreferenc
         mDbOpenHelper.create();
         showDatabase();
 
+        //등록된 일정이 있는지 검사
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size());
+        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size(), second_key);
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더

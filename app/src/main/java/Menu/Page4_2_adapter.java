@@ -51,6 +51,18 @@ public class Page4_2_adapter extends RecyclerView.Adapter<Page4_2_adapter.ViewHo
     public void onBindViewHolder(final Page4_2_adapter.ViewHolder holder, final int position) {
         final Train_Data_forRecyclerview item = train_data.get(position);
 
+        //4개 그림이 1,2,3,4,1,2,3,4, 순으로 나옴
+        if(position == 0 || position == 4){
+            holder.image.setBackgroundResource(R.drawable.ic_my_bg1);
+        } else if (position == 1 || position == 5) {
+            holder.image.setBackgroundResource(R.drawable.ic_my_bg2);
+        } else if (position == 2 || position == 6) {
+            holder.image.setBackgroundResource(R.drawable.ic_my_bg3);
+        } else if (position == 3 || position == 7) {
+            holder.image.setBackgroundResource(R.drawable.ic_my_bg3);
+        } else
+            holder.image.setBackgroundResource(R.drawable.ic_my_bg1);
+
         //짧게 누르면 페이지 이동
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override

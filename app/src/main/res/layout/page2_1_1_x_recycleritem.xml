@@ -31,33 +31,53 @@
                 android:scaleX="0.98"/>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="38dp"
             android:layout_weight="3"
             android:padding="8dp">
 
-            //선
-            <View
-                android:id="@+id/vertical_line"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#A7A7A7"/>
+            //업다운 이미지
+            <Button
+                android:id="@+id/page2_1_1_upddown_btn"
+                android:layout_width="30dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:visibility="invisible"
+                android:background="@drawable/ic_up_btn"/>
 
-            //열차 종류 텍스트
-            <TextView
-                android:id="@+id/detail_content"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="contents"
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:layout_marginLeft="8dp"
-                android:fontFamily="@font/gothic_medium"
-                android:scaleX="0.98"/>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                //선
+                <View
+                    android:id="@+id/vertical_line"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#A7A7A7"/>
+
+                //열차 종류 텍스트
+                <TextView
+                    android:id="@+id/detail_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="contents"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/gothic_medium"
+                    android:scaleX="0.98"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
     </LinearLayout>
+
 
     //아래 경계 선
     <View

@@ -7,6 +7,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,8 @@ public class Page2_1_X_RecyclerViewAdapter extends RecyclerView.Adapter<Page2_1_
         final Detail_item item = items.get(position);
         holder.title.setText(item.getTitle());
         holder.content.setText(item.getContent());
-        holder.detailContent.setText(item.getContent());
+        holder.detailContent.setText(item.getContent().replaceAll("null", ""));
+
 
         holder.onBind(position);
 
@@ -56,6 +58,7 @@ public class Page2_1_X_RecyclerViewAdapter extends RecyclerView.Adapter<Page2_1_
         if (position == getItemCount() - 1 ) {
             holder.line.setVisibility(View.INVISIBLE);
             if (item.getTitle() == "기타 정보") {
+                holder.updown_btn.setVisibility(View.VISIBLE);
                 holder.content.setText("눌러서 더보기");
                 holder.content.setTextAppearance(R.style.page2_1_x_moreText);
             }
@@ -99,6 +102,7 @@ public class Page2_1_X_RecyclerViewAdapter extends RecyclerView.Adapter<Page2_1_
         private View line;
         private TextView detailContent;
         int position;
+        private Button updown_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +111,7 @@ public class Page2_1_X_RecyclerViewAdapter extends RecyclerView.Adapter<Page2_1_
             content = itemView.findViewById(R.id.detail_content);
             line = itemView.findViewById(R.id.horizon_line);
             detailContent = itemView.findViewById(R.id.page2_1_x_contents);
+            updown_btn = itemView.findViewById(R.id.page2_1_1_upddown_btn);
         }
 
         void onBind( int position) {
@@ -134,6 +139,8 @@ public class Page2_1_X_RecyclerViewAdapter extends RecyclerView.Adapter<Page2_1_
                     detailContent.requestLayout();
                     // imageView가 실제로 사라지게하는 부분
                     detailContent.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+                    updown_btn.setBackgroundResource(isExpanded? R.drawable.ic_down_btn : R.drawable.ic_up_btn);
+
                 }
             });
             // Animation start

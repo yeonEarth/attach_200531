@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
@@ -198,6 +199,17 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
                     notifyItemRangeChanged(position, items.size());
                 }
             });
+
+            //드래그하면
+            cityViewHolder.dragline.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) { Log.i("니는 터치 됐을 면서 왜 가만히 있어", String.valueOf(item.type));
+                        touchHelper.startDrag(holder);
+                    }
+                    return false;
+                }
+            });
         }
     }
 
@@ -209,10 +221,12 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public void onItemMove(int fromPos, int toPos) {
-        //0번째=1일차로는 움직일 수 없음
-        if(toPos != 0 ){
+        //0번째=1일차로는 움직일 수 없음 + 헤더 일때
+        Page3_1_1_1_Main.RecycleItem target = items.get(fromPos);
+        Log.i("헤더냐 도시냐", String.valueOf(target.type));
+        if(toPos != 0 && target.type == 0 ){
             forProgress.settingProgress(true);
-            Page3_1_1_1_Main.RecycleItem target = items.get(fromPos);
+
             items.remove(fromPos);
             items.add(toPos, target);
             notifyItemMoved(fromPos, toPos);
@@ -228,6 +242,24 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
             }, 300);
         }
 
+
+        //0번째=1일차로는 움직일 수 없음 + 도시일때
+        if(toPos != 0 && target.type == 2){
+            forProgress.settingProgress(true);
+            items.remove(fromPos);
+            items.add(toPos,  new Page3_1_1_1_Main.RecycleItem(Page3_1_1_1_trainAdapter.CITY, "",  target.text,  items.get(toPos-1).date, "", "", "히히"));
+            notifyItemMoved(fromPos, toPos);
+
+            //움직지면 0.3초 후에 헤더바가 고정되고 변경된 위치가 업뎃 됨
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                    forProgress.settingProgress(false);
+                }
+            }, 300);
+        }
     }
 
     public int getItemViewType(int position) {
@@ -387,11 +419,13 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
     public class CityViewHolder extends RecyclerView.ViewHolder {
         public TextView city_text;
         private Button delete_btn;
+        private RelativeLayout dragline;
 
         public CityViewHolder(View itemView) {
             super(itemView);
             city_text =  itemView.findViewById(R.id.page3_1_1_1_cityText);
             delete_btn = itemView.findViewById(R.id.page3_1_1_1_tourDelete);
+            dragline = itemView.findViewById(R.id.page3_1_1_1_dragLine);
         }
     }
 

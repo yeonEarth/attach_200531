@@ -69,6 +69,7 @@ import java.util.concurrent.ExecutionException;
 import DB.DbOpenHelper;
 import DB.Like_DbOpenHelper;
 import DB.Menu_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
 import Page1.Page1;
@@ -213,6 +214,12 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         }
     };
 
+    //등록한 일정 관련
+    private Second_MainDBHelper second_mainDBHelper;
+    private String second_key = "";
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +237,12 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         mDbOpenHelper.open();
         mDbOpenHelper.create();
         showDatabase();
+
+        //데베 관련
+        second_mainDBHelper = new Second_MainDBHelper(this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
+
 
         //scrollView = (ScrollView)findViewById(R.id.page2_scroll);
         //scrollView.smoothScrollBy(0, 0);
@@ -351,9 +364,16 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
+        //등록된 일정이 있는지 검사
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name, context, mySpot.size());
+        adapter2 = new Main_RecyclerviewAdapter(name, context, mySpot.size(), second_key);
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더

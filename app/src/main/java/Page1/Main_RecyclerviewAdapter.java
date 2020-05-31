@@ -33,6 +33,7 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
     // adapter에 들어갈 list 입니다.
     private ArrayList<String> listData;
     private Context context;
+    private String second_main_key;
 
     // Item의 클릭 상태를 저장할 array 객체
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
@@ -42,10 +43,11 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
     private boolean isFirst = true;
 
 
-    public Main_RecyclerviewAdapter(ArrayList<String> data, Context context, int mySpotSize){
+    public Main_RecyclerviewAdapter(ArrayList<String> data, Context context, int mySpotSize, String second_main_key){
         this.listData = data;
         this.context = context;
         this.mySpotSize = mySpotSize;
+        this.second_main_key = second_main_key;
     }
 
     @Override
@@ -87,7 +89,7 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
 
 
         //어댑터 연결
-        adapter = new Second_RecyclerviewAdapater(context, real_items, mySpotSize);
+        adapter = new Second_RecyclerviewAdapater(context, real_items, mySpotSize, second_main_key);
         viewHolder.recyclerView.setLayoutManager( new LinearLayoutManager(context));
         viewHolder.recyclerView.setAdapter(adapter);
 
@@ -112,7 +114,7 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
                     case 2:
                         real_items.clear();
                         real_items.add( "기차 스케쥴짜기");
-                        real_items.add( "일정 등록하기");
+                        real_items.add( "일정 확인하기");
                         break;
                     default:
                 }
@@ -131,7 +133,6 @@ public class Main_RecyclerviewAdapter extends  RecyclerView.Adapter<Main_Recycle
             }
         });
     }
-
 
 
     public int getItemCount() { return listData.size(); }

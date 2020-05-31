@@ -52,6 +52,7 @@ import java.util.List;
 import DB.DbOpenHelper;
 import DB.Like_DbOpenHelper;
 import DB.Menu_DbOpenHelper;
+import DB.Second_MainDBHelper;
 import DB.Train_DbOpenHelper;
 import Page1.EndDrawerToggle;
 import Page1.Main_RecyclerviewAdapter;
@@ -151,7 +152,9 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
         }
     };
 
-
+    //등록한 일정 관련
+    private Second_MainDBHelper second_mainDBHelper;
+    private String second_key = "";
 
 
     @Override
@@ -212,6 +215,10 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
         mLikeDpOpenHelper.create();
         showLikeDB();
 
+        //데베 관련
+        second_mainDBHelper = new Second_MainDBHelper(this);
+        second_mainDBHelper.open();
+        second_mainDBHelper.create();
 
         //최소 실행 때 보이는 안내창-----------------------------------------------
         SharedPreferences a = getSharedPreferences("info1", MODE_PRIVATE);
@@ -313,9 +320,16 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
         mDbOpenHelper.create();
         showDatabase();
 
+        //등록된 일정이 있는지 검사
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size());
+        adapter2 = new Main_RecyclerviewAdapter(name2, context, mySpot.size(), second_key);
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더
@@ -580,7 +594,8 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
     @Override
     public void onsetlist(String text, String cityname) {
         boolean isAdd = false;
-
+        Log.i("씨티 네임 나 밖에 나갈래", cityname);
+        if(cityname.equals("")) cityname = "히히";
         //해당되는 도시 아래에 넣기 위함
         for(int i =0; i < list.size(); i++){
             if(list.get(i).type == Page3_1_1_1_trainAdapter.CHILD){
@@ -591,6 +606,7 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
 
                 if(station.contains(cityname)){
                     list.add(i+1, new RecycleItem(Page3_1_1_1_trainAdapter.CITY, "",  text,  list.get(i).date, "", "",cityname));
+                    Log.i("관광지 추가시",   text+"/"+  list.get(i).date+ "/"+cityname );
                     adapter.notifyDataSetChanged();
                     isAdd = true;
                     break;
@@ -599,12 +615,14 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
         }
 
         //해당되는 도시가 없으면
-        if(!isAdd)
-            Toast.makeText(getApplicationContext(), "해당되는 정차역이 없습니다.", Toast.LENGTH_LONG).show();
+        if(!isAdd){
+            list.add( new RecycleItem(Page3_1_1_1_trainAdapter.CITY, "",  text,  list.get(list.size()-1).date, "", "",cityname));
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void HeaderErroDialog() {
-        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Page3_1_1_1_Main.this);
         builder.setMessage("n일차 막대 순서를 확인해주세요.");
         builder.setNegativeButton("확인", new DialogInterface.OnClickListener() {
             @Override
@@ -726,7 +744,7 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
 
             //시티
             else {
-                list.add(new RecycleItem(Page3_1_1_1_trainAdapter.CITY, "",daypase.get(i), date.get(i), "", "",""));
+                list.add(new RecycleItem(Page3_1_1_1_trainAdapter.CITY, "",daypase.get(i), date.get(i), "", "",contendId.get(i)));
             }
         }
 

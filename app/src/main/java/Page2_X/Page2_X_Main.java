@@ -442,6 +442,9 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
         mapExpand_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //안내창 사라짐
+                info_message.setVisibility(View.INVISIBLE);
+
                 RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
                 //확대되지 않았으면(false)

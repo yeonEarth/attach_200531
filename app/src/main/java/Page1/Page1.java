@@ -178,6 +178,9 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
     //두번째 메인 관련
     private Second_MainDBHelper second_mainDBHelper;
     List<String> list = new ArrayList<>();
+    private String second_main_key = "";
+
+
 
     @SuppressLint({"WrongViewCast", "SetTextI18n"})
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -199,7 +202,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         menu_text1 = (TextView) findViewById(R.id.menu_text1);
         menu_text2 = (TextView) findViewById(R.id.menu_text2);
         edit_nickname = (ImageButton)findViewById(R.id.menu_edit_btn);
-
+        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        scrollView = (NestedScrollView) findViewById(R.id.nestScrollView_page1);
         loading_progress = findViewById(R.id.page1_progress);
 
 
@@ -209,16 +213,20 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         second_mainDBHelper.open();
         second_mainDBHelper.create();
 
-
+        //최종 일정 저장한 데베 열기
         mDbOpenHelper = new DbOpenHelper(this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
-
 
         // 취향파악 DB열기
         mLikeDpOpenHelper = new Like_DbOpenHelper(this);
         mLikeDpOpenHelper.open();
         mLikeDpOpenHelper.create();
+
+        //중간 저장한 데베 열기
+        page3_dbOpenHelper = new Page3_DbOpenHelper(this);
+        page3_dbOpenHelper.open();
+        page3_dbOpenHelper.create();
 
         showDatabase(sort);
         showLikeDB();
@@ -237,10 +245,16 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
+        //메인으로 등록할 일정이 있는지 검사
+        isSecondMain();
+
+        if(list.size() > 0){
+            second_main_key = list.get(0);
+        }
 
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Main_RecyclerviewAdapter(name, context, mySpot.size());
+        adapter = new Main_RecyclerviewAdapter(name, context, mySpot.size(), second_main_key);
         recyclerView1.setAdapter(adapter);
 
         //리사이클러뷰 헤더
@@ -313,31 +327,15 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             }, 500);
         }
 
-        if(touchLogo != null){
-            Log.i("로고 누르면 int 바귐", touchLogo);
-        } else {
-            //메인으로 등록할 일정이 있는지 검사
-            isSecondMain();
 
-            if(list.size() > 0 ) {
-                Intent intent3 = new Intent(getApplicationContext(), Page1_Main.class);
-                intent3.putExtra("key",  list.get(0));
-                intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-                intent3.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent3);
-            }
+        //등록한 일정이 있다면
+        if(list.size() > 0 ) {
+            Intent intent3 = new Intent(getApplicationContext(), Page1_Main.class);
+            intent3.putExtra("key",  list.get(0));
+            intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+            intent3.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent3);
         }
-
-
-        page3_dbOpenHelper = new Page3_DbOpenHelper(this);
-        page3_dbOpenHelper.open();
-        page3_dbOpenHelper.create();
-
-
-
-        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-        scrollView = (NestedScrollView) findViewById(R.id.nestScrollView_page1);
-
 
 
 

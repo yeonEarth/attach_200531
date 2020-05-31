@@ -210,9 +210,16 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
         setSupportActionBar(toolbar2);
         drawer.addDrawerListener(mDrawerToggle);
 
+        //등록한 일정이 있는지 검사
+        Cursor iCursor = second_mainDBHelper.selectColumns();
+        while (iCursor.moveToNext()){
+            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
+            second_key = Key;
+        }
+
         //메뉴 안 내용 구성
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
-        adapter2 = new Main_RecyclerviewAdapter(name, context, mySpot.size());
+        adapter2 = new Main_RecyclerviewAdapter(name, context, mySpot.size(), second_key);
         recyclerView1.setAdapter(adapter2);
 
         //리사이클러뷰 헤더
@@ -223,12 +230,6 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
         //툴바 타이틀 없애기
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
-        Cursor iCursor = second_mainDBHelper.selectColumns();
-        while (iCursor.moveToNext()){
-            String Key = iCursor.getString(iCursor.getColumnIndex("userid"));
-            second_key = Key;
-        }
 
     }
 

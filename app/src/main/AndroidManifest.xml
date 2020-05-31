@@ -11,9 +11,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_icon"
+        android:icon="@drawable/ic_icon_0531"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_icon"
+        android:roundIcon="@drawable/ic_icon_0531"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme.NoActionBar">

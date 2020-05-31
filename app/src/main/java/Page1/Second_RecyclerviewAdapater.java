@@ -19,20 +19,25 @@ import com.example.hansol.spot_200510_hs.R;
 import java.util.List;
 
 import Menu.Page4_2;
+import Page1_schedule.Page1_full_Schedule;
 import Page2_X.Page2_X;
 import Page3.Page3_Main;
 
-public class Second_RecyclerviewAdapater extends RecyclerView.Adapter<Second_RecyclerviewAdapater.ViewHolder> {
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
+public class Second_RecyclerviewAdapater extends RecyclerView.Adapter<Second_RecyclerviewAdapater.ViewHolder> {
     Context context;
     private int position2;
     private List<String> items;  //리사이클러뷰 안에 들어갈 값 저장
     private int mySpotSize;
+    private String second_main_key;
 
-    public Second_RecyclerviewAdapater(Context context, List<String> items, int mySpotSize){
+    public Second_RecyclerviewAdapater(Context context, List<String> items, int mySpotSize, String second_main_key){
         this.context = context;
         this.items =  items;
         this.mySpotSize = mySpotSize;
+        this.second_main_key = second_main_key;
     }
 
 
@@ -46,6 +51,7 @@ public class Second_RecyclerviewAdapater extends RecyclerView.Adapter<Second_Rec
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+
         holder.subTitle.setText(items.get(position));
         holder.subTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +89,16 @@ public class Second_RecyclerviewAdapater extends RecyclerView.Adapter<Second_Rec
                         Intent intent6 = new Intent(context, Page3_Main.class);
                         context.startActivity(intent6);
                         break;
-                    case "일정 등록하기":
-                        Toast.makeText(context, "아직안만들엇다", Toast.LENGTH_SHORT).show();
-//                        Intent intent7 = new Intent(context, Page3_Main.class);
-//                        context.startActivity(intent7);
+                    case "일정 확인하기":
+                        if(!second_main_key.equals("")){
+                            Intent intent7 = new Intent(context, Page1_full_Schedule.class);
+                            intent7.putExtra("key", second_main_key);
+                            intent7.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                            intent7.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+                            context.startActivity(intent7);
+                        } else{
+                            Toast.makeText(context, "아직 등록된 일정이 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     default:
                 }

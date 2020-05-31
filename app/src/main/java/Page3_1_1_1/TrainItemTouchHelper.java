@@ -23,6 +23,13 @@ public class TrainItemTouchHelper extends ItemTouchHelper.Callback {
             int swipeFlags = 0; // 스와이프 사용X
             return makeMovementFlags(dragFlags, swipeFlags);
         }
+        // 도시 뷰가 움직일 때
+        else if (viewHolder instanceof Page3_1_1_1_trainAdapter.CityViewHolder) {
+            // 드래그 방향 설정
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int swipeFlags = 0; // 스와이프 사용X
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
         return 0;
     }
 
