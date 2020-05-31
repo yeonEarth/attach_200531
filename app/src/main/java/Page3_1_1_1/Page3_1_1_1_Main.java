@@ -739,7 +739,7 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
 
             //기차시간
             else if (contendId.get(i).equals("")) {
-                list.add(new RecycleItem(Page3_1_1_1_trainAdapter.CHILD, station.get(i), daypase.get(i), date.get(i), "", "",""));
+                list.add(new RecycleItem(Page3_1_1_1_trainAdapter.CHILD, station.get(i), daypase.get(i), date.get(i), time.get(i), "",""));
             }
 
             //시티

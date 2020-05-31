@@ -106,18 +106,20 @@
             android:layout_marginRight="16dp"
             android:layout_below="@+id/page1_full_schedule_date"/>
 
+
+
+    </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/page1_full_schedule_editBtn"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="10dp"
             android:foreground="@drawable/ic_icon_edit_pupple"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"/>
+            android:layout_gravity="right|bottom"/>
 
-    </RelativeLayout>
-
-        </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <RelativeLayout
