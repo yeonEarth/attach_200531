@@ -167,10 +167,15 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
                     }
                 }
 
-                //리사이클러에 들어갈 데이터를 넣는다
-                for (int i = 0; i < name_1.length; i++) {
-                    items.add(new Recycler_item(img_Url[i], name[i], contentid[i], subject, "", ""));
+                if(name_1.length < 1){
+                    //api 다 썼을 대
+                } else {
+                    //리사이클러에 들어갈 데이터를 넣는다
+                    for (int i = 0; i < name_1.length; i++) {
+                        items.add(new Recycler_item(img_Url[i], name[i], contentid[i], subject, "", ""));
+                    }
                 }
+
 
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
@@ -321,7 +326,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
         @Override
         protected String doInBackground(String... strings) {
             //Log.d("시작", "시작");
-
+//tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D
             //시군구코드가 0 일 때와 0이 아닐때를 구분해서 url을 넣어준다.
 //            if(sigunguCode.equals("0")){
 //                url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
@@ -345,7 +350,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
 
             if(sigunguCode.equals("0")){
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                        "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
+                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
                         "&pageNo=1&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                         "&contentTypeId=" + contentTypeId +
                         "&sigunguCode=" +
@@ -354,7 +359,7 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
                         "&listYN=Y";
             } else {
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
-                        "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +
+                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
                         "&pageNo=1&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
                         "&contentTypeId=" + contentTypeId +
                         "&sigunguCode=" + sigunguCode +

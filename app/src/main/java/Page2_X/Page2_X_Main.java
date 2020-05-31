@@ -943,7 +943,7 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
         marker.setMarkerType(MapPOIItem.MarkerType.RedPin);
         marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
         mapView.addPOIItem(marker);
-        Toast.makeText(getApplicationContext(),name,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),name,Toast.LENGTH_SHORT).show();
     }
 
     @Override

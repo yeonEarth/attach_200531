@@ -50,13 +50,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="left">
 
                 <TextView
                     android:id="@+id/page0_9_subname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="자연속에서 힐링하기 좋아하는"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="3dp"
+                    android:text="금강산도 식후경!"
                     android:textSize="16dp"
                     android:fontFamily="@font/gothic_extralight"
                     android:textColor="#000000"/>

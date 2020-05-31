@@ -45,7 +45,7 @@ public class Page3_1_1_1_SecondAdapter extends RecyclerView.Adapter<Page3_1_1_1_
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, items.get(position).title + "눌렸음", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, items.get(position).title + "눌렸음", Toast.LENGTH_SHORT).show();
                 listener.onsetlist(item.title, item.cityName);
                 onDismiss.onDismiss();
             }

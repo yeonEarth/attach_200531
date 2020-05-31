@@ -157,7 +157,7 @@ public class Page2_X_Adapter extends RecyclerView.Adapter<Page2_X_Adapter.ViewHo
         holder.pin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,item.getContentviewID()+"------"+item.getMapx()+"------"+item.getMapy(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,item.getContentviewID()+"------"+item.getMapx()+"------"+item.getMapy(),Toast.LENGTH_SHORT).show();
 
                 //맵을 위에서 끌어내리는 부분
                 AppBarLayout appBarLayout=(AppBarLayout)((Page2_X_Main)v.getContext()).findViewById(R.id.app_bar);

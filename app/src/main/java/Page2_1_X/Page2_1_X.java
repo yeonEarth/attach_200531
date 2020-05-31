@@ -189,7 +189,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
                     buttonState = false;
                     add_btn.setBackgroundResource(R.drawable.ic_icon_add_float_1);
                     mCallBack.delete_db(contentID);
-                    Toast.makeText(getApplicationContext(),"관심관광지를 취소했습니다",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"관심관광지를 취소했습니다",Toast.LENGTH_SHORT).show();
                 } else {
                     // 버튼 처음 누를 때
                     // 버튼 처음 누를 때
@@ -202,7 +202,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
                     add_btn.setBackgroundResource(R.drawable.ic_icon_add_float_2);
                     mCallBack.make_db(contentID, spot_title, cityName, type, image, "1");   //countId랑 title을 db에 넣으려고 함( make_db라는 인터페이스 이용)
                     mCallBack.make_dialog();                                       //db에 잘 넣으면 띄우는 다이얼로그(위와 마찬가지로 인터페이스 이용
-                    Toast.makeText(getApplicationContext(),"관심관광지를 추가했습니다",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"관심관광지를 추가했습니다",Toast.LENGTH_SHORT).show();
                 }
             }
         });

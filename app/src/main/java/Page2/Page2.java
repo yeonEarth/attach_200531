@@ -852,9 +852,9 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
                 break;
             case "휴양":
                 st1 = new String[]{"아산", "동해", "포항"};
-                st2 = new String[]{"보령", "동두천", "부산"};
-                st3 = new String[]{"정읍", "서울", "아산"};
-                st4 = new String[]{"여수", "고양", "서울"};
+                st2 = new String[]{"보령", "영주", "부산"};
+                st3 = new String[]{"정읍", "제천", "아산"};
+                st4 = new String[]{"여수", "양평", "서울"};
                 break;
             case "체험":
                 st1 = new String[]{"익산", "곡성", "서울"};
@@ -863,14 +863,14 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
                 st4 = new String[]{"순천", "논산", "보성"};
                 break;
             case "산업":
-                st1 = new String[]{"서울","김제"};
-                st2 = new String[]{"인천","광양"};
-                st3 = new String[]{"대전","창원"};
-                st4 = new String[]{"대구","부전"};
+                st1 = new String[]{"용산","김제"};
+                st2 = new String[]{"대전","광양"};
+                st3 = new String[]{"대구","창원"};
+                st4 = new String[]{"포항","부전"};
                 break;
             case "건축/조형":
-                st1 = new String[]{"서울", "인천"};
-                st2 = new String[]{"인천", "서울"};
+                st1 = new String[]{"서울", "용산"};
+                st2 = new String[]{"수원", "양평"};
                 st3 = new String[]{"군산", "가평"};
                 st4 = new String[]{"부산", "춘천"};
                 break;
@@ -882,7 +882,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
                 break;
             case "레포츠":
                 st1 = new String[]{"덕소", "서울"};
-                st2 = new String[]{"평창", "덕소"};
+                st2 = new String[]{"단양", "덕소"};
                 st3 = new String[]{"영주", "광명"};
                 st4 = new String[]{"안동", "가평"};
                 break;

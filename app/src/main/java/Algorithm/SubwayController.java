@@ -56,11 +56,6 @@ public class SubwayController {
             }
         }
 
-//		//모든 경로를 출력한다.
-//		for (ArrayList<Station> item : list) {
-//			ret += print(item);
-//		}
-//		ret += "\r\n\r\n";
 
         //최단 경로를 출력한다.
         ret += " ";
@@ -68,22 +63,6 @@ public class SubwayController {
         return ret;
     }
 
-//    private String print(ArrayList<Station> item) {
-//        StringBuffer sb = new StringBuffer();
-//        sb.append("지나간 역 개수는 : " + item.size() + "**\n");
-//
-//        //item이란 배열을 s에 차례대로 넣음
-//        for (Station s : item) {
-//        }
-//
-//        //첫번째 역과 마지막 역만 나타냄
-//        sb.append(item.get(0).toString());
-//        sb.append(" -> ");
-//        sb.append(item.get(item.size() - 1).toString());
-//
-//        sb.append("\r\n");
-//        return sb.toString();
-//    }
 
     private String print(ArrayList<Station> item) {
         StringBuffer sb = new StringBuffer();
@@ -215,7 +194,6 @@ public class SubwayController {
         //현재역의 전역 개수만큼
         for(int i = 0; i < point.getPrevCount(); i++){
             //버퍼에 현재역이 있으면 돌아가기 ( 지나간 역을 다시 지나가면 의미 없음
-            //예)종각에서 시청을 갔는데 시청에서 다시 종각으로 돌아가면 의미 없음
             if(buffer.contains(point.getPrev(i))){
                 continue;
             }
@@ -233,7 +211,6 @@ public class SubwayController {
         //현재역의 다음역 개수만큼
         for(int i =0; i < point.getNextCount(); i++){
             // 버퍼에 현재역이 있으면 돌아가기(지나간 역을 다시 지나가면 의미없음)
-            // 예)종각에서 시청을 갔는데 시청에서 다시 종각으로 돌아가면 의미 없음
             if(buffer.contains(point.getNext(i))){
                 continue;
             }

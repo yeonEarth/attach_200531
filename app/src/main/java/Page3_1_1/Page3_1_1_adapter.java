@@ -48,7 +48,7 @@ public class Page3_1_1_adapter extends RecyclerView.Adapter<Page3_1_1_adapter.My
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, Integer.toString(position), Toast.LENGTH_SHORT).show();
             }
         });
 
