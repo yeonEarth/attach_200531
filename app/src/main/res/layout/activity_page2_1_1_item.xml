@@ -21,6 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="42dp"
             android:layout_weight="1"
+            android:layout_marginLeft="7dp"
             android:gravity="center_horizontal|center_vertical">
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/page2_1_number_btn"
@@ -64,7 +65,8 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="42dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginRight="7dp">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/updown_img"

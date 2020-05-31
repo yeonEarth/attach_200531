@@ -21,11 +21,11 @@
             //뒤로가기 버튼
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/empty_btn"
-                android:layout_width="9dp"
-                android:layout_height="16dp"
+                android:layout_width="15dp"
+                android:layout_height="25dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/ic_back_btn"/>
+                android:background="@drawable/ic_vector_14"/>
 
             //뒤로가기버튼 버튼 영역을 넓게 주기 위해서 빈 이미지 생성
             <ImageView
@@ -87,12 +87,20 @@
                 android:layout_marginLeft="16dp"/>
         </RelativeLayout>
     </ScrollView>
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/page2_1_1_like"
+    <FrameLayout
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/ic_icon_add_float_1"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/round_white"
+        android:elevation="5dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/page2_1_1_like"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/ic_icon_add_float_1" />
+    </FrameLayout>
 </RelativeLayout>

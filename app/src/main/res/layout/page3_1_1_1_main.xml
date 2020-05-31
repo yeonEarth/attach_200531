@@ -165,11 +165,11 @@
                 <RelativeLayout
                     android:id="@+id/info_message4"
                     android:layout_width="226dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="85dp"
                     android:layout_marginTop="50dp"
                     android:layout_marginRight="8dp"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/ic_message_right"
+                    android:background="@drawable/asset1_right"
                     android:visibility="invisible">
 
                     <TextView
@@ -194,11 +194,11 @@
                 <RelativeLayout
                     android:id="@+id/info_message5"
                     android:layout_width="226dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="85dp"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginBottom="80dp"
+                    android:layout_marginBottom="70dp"
                     android:layout_alignBottom="@+id/main_layout"
-                    android:background="@drawable/ic_message_left"
+                    android:background="@drawable/asset2_left"
                     android:visibility="invisible">
 
                     <TextView

@@ -406,7 +406,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="-16dp"
             android:layout_above="@+id/page2_course"
-            android:background="@drawable/ic_message_right"
+            android:background="@drawable/asset1_right"
             android:visibility="invisible">
 
             <TextView

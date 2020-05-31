@@ -743,12 +743,12 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             // 백그라운드 사진 가져오기
             city.setCityPic(real_cityPicture.get(i));
             cityName.setBackgroundResource(city.getCityPic());
-            cityName.setShadowLayer(0,3,3,Color.DKGRAY);
+            cityName.setShadowLayer(3,0,0,Color.DKGRAY);
 
             Typeface typeface = getResources().getFont(R.font.notosans_bold);
             cityName.setTypeface(typeface);
 
-            cityName.setTextSize(12);
+            cityName.setTextSize(15);
             cityName.setPadding(city_padding,city_padding,city_padding,city_padding);
             cityName.setTextColor(Color.WHITE);
             cityName.setTypeface(cityName.getTypeface(), Typeface.BOLD);

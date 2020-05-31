@@ -24,7 +24,7 @@
             android:id="@+id/page2_1_fragment_more_btn"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:text="'서울'의 다른 관광지 더 보기"
             android:textSize="16dp"
             android:textColor="#AD73DC"
