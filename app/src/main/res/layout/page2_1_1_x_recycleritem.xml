@@ -40,10 +40,12 @@
             //업다운 이미지
             <Button
                 android:id="@+id/page2_1_1_upddown_btn"
-                android:layout_width="30dp"
-                android:layout_height="15dp"
+                android:layout_width="14dp"
+                android:layout_height="6dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="8dp"
                 android:visibility="invisible"
                 android:background="@drawable/ic_up_btn"/>
 

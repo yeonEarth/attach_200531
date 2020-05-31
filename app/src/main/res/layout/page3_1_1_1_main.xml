@@ -169,16 +169,8 @@
                     android:layout_marginTop="50dp"
                     android:layout_marginRight="8dp"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/asset1_right"
+                    android:background="@drawable/a_schedule"
                     android:visibility="invisible">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="11dp"
-                        android:layout_centerHorizontal="true"
-                        android:text="@string/message4"
-                        android:textAppearance="@style/info_message"/>
 
                     <Button
                         android:id="@+id/info_dismiss_btn4"
@@ -198,16 +190,8 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginBottom="70dp"
                     android:layout_alignBottom="@+id/main_layout"
-                    android:background="@drawable/asset2_left"
+                    android:background="@drawable/a_modify"
                     android:visibility="invisible">
-
-                    <TextView
-                        android:layout_width="187dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="11dp"
-                        android:layout_centerHorizontal="true"
-                        android:text="@string/message5"
-                        android:textAppearance="@style/info_message"/>
 
                     <Button
                         android:id="@+id/info_dismiss_btn5"

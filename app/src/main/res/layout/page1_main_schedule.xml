@@ -173,9 +173,7 @@
             <LinearLayout
                 android:id="@+id/table_title"
                 android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_height="43dp">
 
                 //기차시간표-출발역
                 <TextView
@@ -183,12 +181,12 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
+                    android:paddingRight="12dp"
+                    android:gravity="center_vertical|right"
                     android:text="여수엑스포"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/gothic_medium"
+                    android:fontFamily="@font/gothic_bold"
                     android:scaleX="0.98" />
 
                 //기차시간표-화살
@@ -214,9 +212,9 @@
                     android:layout_weight="2"
                     android:gravity="center"
                     android:text="도착"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/gothic_medium"
+                    android:fontFamily="@font/gothic_bold"
                     android:scaleX="0.98"
                     android:layout_centerVertical="true" />
 
@@ -230,9 +228,10 @@
                     android:layout_toRightOf="@+id/page1_endTxt"
                     android:gravity="center"
                     android:text="열차정보"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:textColor="#000000"
-                    android:fontFamily="@font/gothic_medium"
+                    android:fontFamily="@font/gothic_bold"
+                    android:paddingLeft="5dp"
                     android:scaleX="0.98" />
 
             </LinearLayout>
@@ -269,8 +268,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/table_line"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:visibility="invisible"
                 android:background="@drawable/ic_textbox_past"/>
 

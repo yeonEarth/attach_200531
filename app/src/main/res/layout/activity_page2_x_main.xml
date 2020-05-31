@@ -194,16 +194,8 @@
         android:layout_gravity="bottom|right"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="75dp"
-        android:background="@drawable/asset1_right"
+        android:background="@drawable/a_benefit"
         android:visibility="invisible">
-
-        <TextView
-            android:layout_width="187dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="11dp"
-            android:layout_centerHorizontal="true"
-            android:text="@string/message2"
-            android:textAppearance="@style/info_message"/>
 
         <Button
             android:id="@+id/info_dismiss_btn2"
@@ -211,7 +203,6 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:background="#00000000"/>
-
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

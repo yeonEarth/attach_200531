@@ -514,7 +514,7 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         } else if (score[5] == 1) {
             cat_text4 = "휴양";
             cityList.add("울산");
-            cityList.add("평창");
+            cityList.add("동해");
             cityPicture.add(R.drawable.ulsan);
             cityPicture.add(R.drawable.pyeonchang);
         }

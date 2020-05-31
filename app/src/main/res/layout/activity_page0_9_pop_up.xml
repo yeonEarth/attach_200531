@@ -80,12 +80,13 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right">
+            android:layout_gravity="bottom|right"
+            android:layout_marginTop="10dp">
             <Button
                 android:id="@+id/page0_9_check_btn"
-                android:layout_width="28dp"
+                android:layout_width="40dp"
                 android:layout_height="28dp"
-                android:background="@drawable/ic_icon_edit" />
+                android:background="@drawable/ic_icon_ok_0601" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

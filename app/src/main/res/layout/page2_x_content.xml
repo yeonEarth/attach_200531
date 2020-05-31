@@ -35,10 +35,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/page2_X_recyclerview"
                 android:layout_below="@+id/arrow_btn"
-                android:padding="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"/>
+                android:background="#ffffff"
+                android:padding="8dp"/>
 
 
 
