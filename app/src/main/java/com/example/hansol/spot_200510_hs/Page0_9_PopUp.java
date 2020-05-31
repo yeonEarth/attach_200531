@@ -156,7 +156,7 @@ public class Page0_9_PopUp extends AppCompatActivity {
         check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-Log.i("왜 안되지? ", fav);
+
                 mDbOpenHelper.open();
                 mDbOpenHelper.deleteAllColumns();
                 mDbOpenHelper.insertLikeColumn(fav.replaceAll("null",""), editName, sub);
@@ -165,7 +165,8 @@ Log.i("왜 안되지? ", fav);
                 // 공백 체크
                 if (nickName.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else {
                     Intent checkIntent = new Intent();
                     checkIntent.putExtra("result", editName);
                     checkIntent.putExtra("result2", sub);

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -68,7 +67,7 @@ public class Page2_1_X_RecyclerViewAdapter extends RecyclerView.Adapter<Page2_1_
             public void onClick(View view) {
                 // 마지막 아이템 눌리면 반응하기
                 if ( position == getItemCount() - 1 && item.getTitle() == "기타 정보" ) {
-                    Toast.makeText(context, "눌렸당", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(context, "눌렸당", Toast.LENGTH_SHORT).show();
                     if (selectedItems.get(position)) {
                         // 펼쳐진 Item을 클릭 시
                         selectedItems.delete(position);

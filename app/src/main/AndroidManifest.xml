@@ -60,8 +60,6 @@
         <activity android:name="Page1_schedule.Page1_full_Schedule"/>
         <activity android:name="Menu.Page4_2"/>
         <activity android:name="DB.Train_page"/>
-        <activity android:name="Page2_1_X.Page2_1_X_ImageSelected"
-            android:theme="@style/Transparent"></activity>
         <activity
             android:name=".Page0_9_PopUp"
             android:theme="@style/Transparent" />
