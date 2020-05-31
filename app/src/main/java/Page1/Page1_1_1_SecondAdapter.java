@@ -62,6 +62,7 @@ public class Page1_1_1_SecondAdapter extends RecyclerView.Adapter<Page1_1_1_Seco
                 mCallback.delete_db(item.getContentviewID());
                 items.remove(position);
                 notifyItemRemoved(position);
+                notifyDataSetChanged();
             }
 
         });

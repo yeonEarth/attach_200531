@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.hansol.spot_200510_hs.R;
 
+import net.daum.mf.map.api.MapLayout;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -82,6 +83,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
     String areaCode, sigunguCode;
 
     boolean isExpand = false;
+    boolean isCheck = false;
 
     MapPOIItem marker;
     MapView mapView;
@@ -155,6 +157,8 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         areaCode = intent.getStringExtra("areaCode");
         sigunguCode = intent.getStringExtra("sigunguCode");
 
+        settingList();
+
 
         url_code();
 
@@ -190,6 +194,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
                     // 버튼 처음 누를 때
                     // 버튼 처음 누를 때
                     if(cityName.equals("cityname")){
+                        Log.i("뭐냐;;", areaCode+"/"+sigunguCode);
                         cityName = compareStation(areaCode, sigunguCode);
                     }
 
@@ -1032,6 +1037,13 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         super.onRestart();
         finish();
         startActivity(getIntent());
+//        mapView = new MapView(this);
+//        RelativeLayout mapViewContainer = (RelativeLayout)findViewById(R.id.page2_1_1_map);
+//        mapViewContainer.addView(mapView,0);
+//        marker = new MapPOIItem();
+//        settingAPI_Data();
+//        mapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(y, x), 2, true);
+
     }
 
 
@@ -1039,6 +1051,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
     protected void onPause() {
         super.onPause();
         ((ViewGroup)mapView.getParent()).removeView(mapView);
+        Log.i("onPause", "임마");
     }
 
 
@@ -1071,12 +1084,10 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
 
     private String compareStation(String area, String sigunguCode){
         for(int p = 0; p < 233; p ++){
-            if(_sigunguCode[p].trim().equals(sigunguCode) && _areaCode[p].trim().equals(area)){
+            if(_sigunguCode[p].equals(sigunguCode) && _areaCode[p].equals(area)){
                 cityName = _name[p];
             }
         }
         return cityName;
     }
-
-
 }

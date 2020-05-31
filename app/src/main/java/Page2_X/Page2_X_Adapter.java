@@ -132,7 +132,7 @@ public class Page2_X_Adapter extends RecyclerView.Adapter<Page2_X_Adapter.ViewHo
                     Intent intent = new Intent(context, Page2_1_X.class);
                     intent.putExtra("title", item.getTitle());
                     intent.putExtra("contentID", item.getContentviewID());
-                    intent.putExtra("contenttypeid", item.getContenttypeid());
+                    intent.putExtra("contenttypeid", (String) holder.type.getText());
                     intent.putExtra("image", item.getImage());
                     intent.putExtra("cityname", cityName);
                     context.startActivity(intent);

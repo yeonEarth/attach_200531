@@ -323,6 +323,26 @@ public class Page2_1_1_Fragment extends Fragment implements OnItemClick{
             //Log.d("시작", "시작");
 
             //시군구코드가 0 일 때와 0이 아닐때를 구분해서 url을 넣어준다.
+//            if(sigunguCode.equals("0")){
+//                url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
+//                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+//                        "&pageNo=1&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
+//                        "&contentTypeId=" + contentTypeId +
+//                        "&sigunguCode=" +
+//                        "&areaCode=" + areaCode +
+//                        "&cat1=" + cat1 + "&cat2=" + cat2 + "&cat3=" +
+//                        "&listYN=Y";
+//            } else {
+//                url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
+//                        "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+//                        "&pageNo=1&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
+//                        "&contentTypeId=" + contentTypeId +
+//                        "&sigunguCode=" + sigunguCode +
+//                        "&areaCode=" + areaCode +
+//                        "&cat1=" + cat1 + "&cat2=" + cat2 + "&cat3=" +
+//                        "&listYN=Y";
+//            }
+
             if(sigunguCode.equals("0")){
                 url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
                         "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +

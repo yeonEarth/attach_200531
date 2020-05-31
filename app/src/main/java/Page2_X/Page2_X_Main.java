@@ -678,6 +678,7 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
 
         //기존의 api 값을 지운다.
         items.clear();
+        page = 1;
 
 
         for(int p=0; p < list.size(); p++){
@@ -951,7 +952,32 @@ public class Page2_X_Main extends AppCompatActivity implements Page2_X_Interface
 
     @Override
     public void delete_db(String contentId) {
+        mDbOpenHelper.open();
+        mDbOpenHelper.deleteColumnByContentID(contentId);
+        mDbOpenHelper.close();
 
+        delete_dialog();
+    }
+
+    public void delete_dialog() {
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Page2_X_Main.this);
+        builder.setTitle("관심관광지 삭제 성공");
+        builder.setMessage("관심관광지 목록을 확인하시겠습니까?");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //관심관광지 페이지로 감
+                Intent intent = new Intent(Page2_X_Main.this, Page1_1_1.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.show();
     }
 
     @Override

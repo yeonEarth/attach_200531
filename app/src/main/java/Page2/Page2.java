@@ -548,6 +548,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         //Toast.makeText(getApplicationContext(), getSubject, Toast.LENGTH_SHORT).show();
 
         getData();
+        settingList();
 
         //리사이클러뷰 구현 부분
         RecyclerView recyclerView = findViewById(R.id.page2_recyclerview);
@@ -568,7 +569,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
 
 
         //리사이클러뷰 연결
-        adapter = new Page2_CardView_adapter(cardview_items, mainActivity, cityName, this);
+        adapter = new Page2_CardView_adapter(cardview_items, mainActivity, "cityname", this);
         recyclerView.setAdapter(adapter);
 
         courseMore.setOnClickListener(new View.OnClickListener() {
@@ -710,7 +711,7 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
 
         //한 줄의 값을 띄어쓰기 기준으로 나눠서, 역명/지역코드/시군구코드 배열에 넣는다.
         for(int i=0; i <arr_all.length; i++) {
-            arr_line = arr_all[i].split(" ");
+                arr_line = arr_all[i].split(" ");
 
             _name[i] = arr_line[0];         //서울
             _areaCode[i] = arr_line[1];     //1
@@ -1078,6 +1079,16 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
         @Override
         protected String doInBackground(String... strings) {
             //Log.d("시작", "시작");
+
+//            url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
+//                    "7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+//                    "&pageNo=" + page+
+//                    "&numOfRows=5&MobileApp=AppTest&MobileOS=ETC&arrange=B" +
+//                    "&contentTypeId=" + contentTypeId +
+//                    "&sigunguCode=" +
+//                    "&areaCode="+
+//                    "&cat1=" + cat1 + "&cat2=" + cat2 + "&cat3=" +
+//                    "&listYN=Y";
 
             url = "https://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey=" +
                     "tQVUU9RPcLsBmX4nqBFMUDqgvO3nBdfcZI%2FS8GQndON35%2BjzjShtdnH94CNN6d%2Fhb61uX1mOz7lWWD5rA6LNFg%3D%3D" +

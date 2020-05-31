@@ -67,7 +67,8 @@
                     android:textSize="14dp"
                     android:fontFamily="@font/gothic_bold"
                     android:textColor="#000000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:ellipsize="end"/>
             </LinearLayout>
             //하트
             <LinearLayout

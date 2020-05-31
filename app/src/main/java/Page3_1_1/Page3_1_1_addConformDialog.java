@@ -32,6 +32,7 @@ public class Page3_1_1_addConformDialog extends BottomSheetDialogFragment {
         args.putString("name", name);
         args.putString("date", date);
         args.putString("dayPass", dayPass);
+        dialog.setArguments(args);
         return dialog;
     }
 
