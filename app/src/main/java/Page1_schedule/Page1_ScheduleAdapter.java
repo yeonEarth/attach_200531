@@ -72,7 +72,11 @@ public class Page1_ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
             String station_split[] = item.station.split(",");
             itemViewHolder.mTimeText.setText(station_split[0] + " - " + station_split[1]);
-            itemViewHolder.mCourseText.setText(item.train_time);
+            if (item.train_time.equals("")){
+                itemViewHolder.mCourseText.setText("");
+            } else {
+                itemViewHolder.mCourseText.setText(item.train_time + "  ");
+            }
         }
 
         else {
