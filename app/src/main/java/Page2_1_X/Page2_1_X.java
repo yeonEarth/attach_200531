@@ -194,10 +194,15 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
                     // 버튼 처음 누를 때
                     // 버튼 처음 누를 때
                     if(cityName.equals("cityname")){
-                        Log.i("뭐냐;;", areaCode+"/"+sigunguCode);
+                        Log.i("뭐냐;;", areaCode+"/"+sigunguCode+"/"+cityName);
                         cityName = compareStation(areaCode, sigunguCode);
+                        if( cityName == null){
+                            cityName = "기타";
+                        }
                     }
-
+                    if(cityName.equals("cityname")){
+                        cityName = "기타";
+                    }
                     buttonState = true;
                     add_btn.setBackgroundResource(R.drawable.ic_icon_add_float_2);
                     mCallBack.make_db(contentID, spot_title, cityName, type, image, "1");   //countId랑 title을 db에 넣으려고 함( make_db라는 인터페이스 이용)
@@ -552,24 +557,7 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
     }
 
     public void delete_dialog() {
-        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("관심관광지 삭제 성공");
-        builder.setMessage("관심관광지 목록을 확인하시겠습니까?");
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //관심관광지 페이지로 감
-                Intent intent = new Intent(getApplicationContext(), Page1_1_1.class);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        builder.show();
+        Toast.makeText(getApplicationContext(), "삭제되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1086,8 +1074,14 @@ public class Page2_1_X extends AppCompatActivity implements OnItemClick {
         for(int p = 0; p < 233; p ++){
             if(_sigunguCode[p].equals(sigunguCode) && _areaCode[p].equals(area)){
                 cityName = _name[p];
+                break;
+            }
+            else if(area.equals("1")){
+                cityName = "서울";
+                break;
             }
         }
+
         return cityName;
     }
 }

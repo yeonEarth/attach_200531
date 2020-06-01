@@ -28,6 +28,9 @@ import Page2_1_1.OnItemClick;
 import Page2_1_X.Page2_1_X;
 import Page2_X.Page2_X_CategoryBottom;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
+
 public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.ViewHolder> implements OnItemClick {
     // 리사이클러뷰 안 리사이클러뷰
     Page1_1_1_SecondAdapter adapter;
@@ -84,7 +87,6 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
 
         //리사이클러뷰 넣는 부분
         holder.recyclerView.setLayoutManager( new LinearLayoutManager(context));
-        adapter = new Page1_1_1_SecondAdapter(items , this);
         adapter = new Page1_1_1_SecondAdapter(listForSecond , this);
         holder.recyclerView.setAdapter(adapter);
         holder.cityCount.setText("" + listForSecond.size());
@@ -183,26 +185,25 @@ public class Page1_1_1_Adapter extends RecyclerView.Adapter<Page1_1_1_Adapter.Vi
     public void delete_dialog() {
         final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
         builder.setTitle("관심관광지 삭제 성공");
-        builder.setMessage("관심관광지 목록을 확인하시겠습니까?");
+        builder.setCancelable(false);
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (listForSecond.size() == 0) {
+                if (listData.size() == 1 && listForSecond.size() == 0) {
                     //관심관광지 페이지로 감
                     Intent intent = new Intent(context, Page1_1_0.class);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     context.startActivity(intent);
                 } else {
                     //관심관광지 페이지로 감
-                    Intent intent = new Intent(context, Page1_1_0.class);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent intent = new Intent(context, Page1_1_1.class);
+                    intent.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     context.startActivity(intent);
                 }
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
             }
         });
         builder.show();

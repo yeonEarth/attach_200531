@@ -407,7 +407,7 @@
             android:layout_marginBottom="-16dp"
             android:layout_above="@+id/page2_course"
             android:background="@drawable/a_insert"
-            >
+            android:visibility="invisible">
             <Button
                 android:id="@+id/info_dismiss_btn"
                 android:layout_width="50dp"

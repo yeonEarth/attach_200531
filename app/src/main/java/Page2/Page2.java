@@ -993,6 +993,9 @@ public class Page2 extends AppCompatActivity implements Page2_OnItemClick  ,  Sh
     @Override
     public void make_db(String countId, String name, String cityname, String type, String image, String click, String areaCode, String sigunguCode) {
         cityname = compareStation(areaCode, sigunguCode);
+        if(cityname == null){
+            cityname = "기타";
+        }
         mDbOpenHelper.open();
         Log.d("???","");
         mDbOpenHelper.insertColumn(countId, name, cityname, type, image, click);

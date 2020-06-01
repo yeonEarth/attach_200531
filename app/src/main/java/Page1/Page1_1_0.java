@@ -141,6 +141,11 @@ public class Page1_1_0 extends AppCompatActivity implements SharedPreferences.On
 
         score = intent.getIntArrayExtra("score");
 
+        //앞에서 주는 score 값이 없으면
+        if(score == null){
+            score = new int[8];
+        }
+
         // 취향파악 DB열기
         mLikeDpOpenHelper = new Like_DbOpenHelper(this);
         mLikeDpOpenHelper.open();
