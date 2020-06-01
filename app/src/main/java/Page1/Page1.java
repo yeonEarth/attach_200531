@@ -58,6 +58,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -179,7 +180,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
     private Second_MainDBHelper second_mainDBHelper;
     List<String> list = new ArrayList<>();
     private String second_main_key = "";
-
+    float d ;
+    private RelativeLayout scheduleBTN;
 
 
     @SuppressLint({"WrongViewCast", "SetTextI18n"})
@@ -205,7 +207,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         scrollView = (NestedScrollView) findViewById(R.id.nestScrollView_page1);
         loading_progress = findViewById(R.id.page1_progress);
-
+        scheduleBTN = findViewById(R.id.gotoschedule_layout);
+        d = context.getResources().getDisplayMetrics().density;
 
 
        // DB열기
@@ -248,8 +251,31 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         //메인으로 등록할 일정이 있는지 검사
         isSecondMain();
 
+
+        RelativeLayout.LayoutParams plControl = (RelativeLayout.LayoutParams) scheduleBTN.getLayoutParams();
+
         if(list.size() > 0){
             second_main_key = list.get(0);
+
+            plControl.height = (int)(100*d);
+            plControl.topMargin = (int)(40*d);
+            scheduleBTN.setLayoutParams(plControl);
+
+            scheduleBTN.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent3 = new Intent(getApplicationContext(), Page1_Main.class);
+                    intent3.putExtra("key",  list.get(0));
+                    intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
+                    intent3.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(intent3);
+                }
+            });
+        } else {
+            //등록한 일정이 없으면
+            plControl.height =0;
+            plControl.topMargin = 0;
+            scheduleBTN.setLayoutParams(plControl);
         }
 
         //메뉴 안 내용 구성
@@ -328,14 +354,6 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         }
 
 
-        //등록한 일정이 있다면
-        if(list.size() > 0 ) {
-            Intent intent3 = new Intent(getApplicationContext(), Page1_Main.class);
-            intent3.putExtra("key",  list.get(0));
-            intent3.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
-            intent3.addFlags(FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent3);
-        }
 
 
 
@@ -437,7 +455,7 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         int dpValue = 96;
         int dpValue2 = 15;
         final Context context = getApplicationContext();
-        float d = context.getResources().getDisplayMetrics().density;
+
         int height = (int) (dpValue * d);
         int city_padding = (int) (dpValue2 * d);
         int city_margin = (int) (16 * d);
