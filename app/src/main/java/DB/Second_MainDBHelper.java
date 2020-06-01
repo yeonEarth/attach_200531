@@ -62,10 +62,19 @@ public class Second_MainDBHelper {
 
 
     // Insert DB
-    public long insertColumn(String userid, String name){
+    public long insertColumn(String userid, String date){
         ContentValues values = new ContentValues();
         values.put(Second_MainDB.CreateDB.USERID, userid);
+        values.put(Second_MainDB.CreateDB.DATE, date);
         return mDB.insert(Second_MainDB.CreateDB._TABLENAME0, null, values);
+    }
+
+    // Update DB
+    public boolean updateColumn(String userid, String date){
+        ContentValues values = new ContentValues();
+        values.put(Second_MainDB.CreateDB.USERID, userid);
+        values.put(Second_MainDB.CreateDB.DATE, date);
+        return mDB.update(Train_DataBases.CreateDB._TABLENAME0, values,null,null) > 0;
     }
 
 

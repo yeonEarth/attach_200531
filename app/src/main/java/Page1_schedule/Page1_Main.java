@@ -234,6 +234,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
     //일정 등록 후 나올 메인페이지 관련
     private Second_MainDBHelper second_mainDBHelper;
     private String second_key = "";
+    private String d_day = "";
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -464,7 +465,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         Log.i("아오 ", db_key);
 
 
-        //출발 날짜(디데이 계산)
+        //출발 날짜(디데이 계산) second_db
         if(key != null){
             startDate = key;
         } else
@@ -486,6 +487,13 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
         } else {
             userName.setText("지금은 여행 중");
         }
+
+
+        d_day=String.valueOf((int)count);
+
+
+
+
 
 
 
@@ -1417,7 +1425,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 second_mainDBHelper.deleteAllColumns();
-                second_mainDBHelper.insertColumn(db_key, "ture");
+                second_mainDBHelper.insertColumn(db_key, d_day);
                 second_mainDBHelper.close();
             }
         });

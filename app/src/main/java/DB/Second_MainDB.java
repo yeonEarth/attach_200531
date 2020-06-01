@@ -5,6 +5,7 @@ package DB;
  */
 
 import android.provider.BaseColumns;
+import android.widget.TextView;
 
 public final class Second_MainDB {
 
@@ -12,8 +13,10 @@ public final class Second_MainDB {
     public static final class CreateDB implements BaseColumns {
         public static final String USERID = "userid";
         public static final String _TABLENAME0 = "usertable";
+        public static final String DATE = "date";
         public static final String _CREATE0 = "create table if not exists "+_TABLENAME0+"("
                 +_ID+" integer primary key autoincrement, "
+                +DATE+" text not null , "
                 +USERID+"  text  not null ); ";
     }
 }

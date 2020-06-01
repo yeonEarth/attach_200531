@@ -183,6 +183,10 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
     float d ;
     private RelativeLayout scheduleBTN;
 
+    //d-day
+    TextView text_dday;
+    TextView text_mytrip;
+
 
     @SuppressLint({"WrongViewCast", "SetTextI18n"})
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -209,6 +213,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         loading_progress = findViewById(R.id.page1_progress);
         scheduleBTN = findViewById(R.id.gotoschedule_layout);
         d = context.getResources().getDisplayMetrics().density;
+        text_dday=(TextView)findViewById(R.id.text_dday);
+        text_mytrip=(TextView)findViewById(R.id.text_mytrip);
 
 
        // DB열기
@@ -230,6 +236,8 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
         page3_dbOpenHelper = new Page3_DbOpenHelper(this);
         page3_dbOpenHelper.open();
         page3_dbOpenHelper.create();
+
+
 
         showDatabase(sort);
         showLikeDB();
@@ -1177,7 +1185,15 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
 
         while(iCursor.moveToNext()){
             String  id = iCursor.getString(iCursor.getColumnIndex("userid"));
+            String  date = iCursor.getString(iCursor.getColumnIndex("date"));
             list.add(id);
+            text_dday.setText("D-"+date);
+
+            if(date.contains("-")){
+                text_mytrip.setVisibility(View.GONE);
+                text_dday.setText("지금은 여행 중");
+            }
+            
         }
     }
 
