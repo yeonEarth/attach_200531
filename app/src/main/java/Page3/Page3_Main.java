@@ -42,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
@@ -95,11 +96,11 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
     boolean endOk = false;
     boolean middleOk = false;
     boolean dateOk = false;
+    boolean isOk = false;
 
     //page2 액티비티에서 받은 값 관련(코스 전체추가 버튼)
     ArrayList<String> course = null;
     ArrayList<String> course2 =null;
-
     ArrayList<String> items3 = null;
 
     //메뉴바 프로필 관련
@@ -537,7 +538,7 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
                     mInputMethodManager.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(), 0);
 
                 }
-                        }
+            }
         });
 
 
@@ -658,32 +659,20 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
 
         if (course!=null) {
             for (int i = 0; i < course.size(); i++) {
-                if (i == 0) {
-                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE9D0D"));
-                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE9D0D"));
-                    mTagContainerLayout1.addTag(course.get(i));
-                    list1.add(course.get(i));
-                    startOk = true;
+                mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));
+                mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
+                mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
+                mTagContainerLayout1.addTag(course.get(i));
+                list1.add(course.get(i));
+                middleOk = true;
 
-                } else {
-                    mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));
-                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
-                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
-                    mTagContainerLayout1.addTag(course.get(i));
-                    list1.add(course.get(i));
-                    middleOk = true;
-                }
             }
             //지도에 동그라미 그려주는 부분
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     for (int i = 0; i < course.size(); i++) {
-                        if (i == 0) {
-                            page3_svg.loadUrl("javascript:setMessage('" + course.get(i) + "' , '1')");
-                        } else {
-                            page3_svg.loadUrl("javascript:setMessage('" + course.get(i) + "' , '2')");
-                        }
+                        page3_svg.loadUrl("javascript:setMessage('" + course.get(i) + "' , '2')");
                     }
                 }
             }, 300);
@@ -691,32 +680,20 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
 
         if (course2!=null) {
             for (int i = 0; i < course2.size(); i++) {
-                if (i == 0) {
-                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE9D0D"));
-                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE9D0D"));
-                    mTagContainerLayout1.addTag(course2.get(i));
-                    list1.add(course2.get(i));
-                    startOk = true;
+                mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));
+                mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
+                mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
+                mTagContainerLayout1.addTag(course2.get(i));
+                list1.add(course2.get(i));
+                middleOk = true;
 
-                } else {
-                    mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));
-                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
-                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
-                    mTagContainerLayout1.addTag(course2.get(i));
-                    list1.add(course2.get(i));
-                    middleOk = true;
-                }
             }
             //지도에 동그라미 그려주는 부분
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     for (int i = 0; i < course2.size(); i++) {
-                        if (i == 0) {
-                            page3_svg.loadUrl("javascript:setMessage('" + course2.get(i) + "' , '1')");
-                        } else {
-                            page3_svg.loadUrl("javascript:setMessage('" + course2.get(i) + "' , '2')");
-                        }
+                        page3_svg.loadUrl("javascript:setMessage('" + course2.get(i) + "' , '2')");
                     }
                 }
             }, 300);
@@ -724,33 +701,19 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
 
         if (items3!=null) {
             for (int i = 0; i < items3.size(); i++) {
-                if (i == 0) {
-                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE9D0D"));
-                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE9D0D"));
-                    mTagContainerLayout1.addTag(items3.get(i));
-                    list1.add(items3.get(i));
-                    startOk = true;
-
-                } else {
-                    mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));
-                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
-                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
-                    mTagContainerLayout1.addTag(items3.get(i));
-                    list1.add(items3.get(i));
-                    middleOk = true;
-
-                }
+                mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));
+                mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
+                mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
+                mTagContainerLayout1.addTag(items3.get(i));
+                list1.add(items3.get(i));
+                middleOk = true;
             }
             //지도에 동그라미 그려주는 부분
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     for (int i = 0; i < items3.size(); i++) {
-                        if (i == 0) {
-                            page3_svg.loadUrl("javascript:setMessage('" + items3.get(i) + "' , '1')");
-                        } else  {
-                            page3_svg.loadUrl("javascript:setMessage('" + items3.get(i) + "' , '2')");
-                        }
+                        page3_svg.loadUrl("javascript:setMessage('" + items3.get(i) + "' , '2')");
                     }
                 }
             }, 300);
@@ -799,19 +762,19 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
         }
 
         //지도에서 역 누르면 태그뷰에 추가되는 부분-----------------------------여기추가
-                page3_svg.addJavascriptInterface(new Object(){
-                    @JavascriptInterface
-                    public void send(final String msg) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    page3_svg.zoomBy(0.1f);
-                                }
-                            }
-                        });
+        page3_svg.addJavascriptInterface(new Object(){
+            @JavascriptInterface
+            public void send(final String msg) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            page3_svg.zoomBy(0.1f);
+                        }
+                    }
+                });
             }
-                }, "android2");
+        }, "android2");
 
 
 
@@ -864,14 +827,42 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
 
                                 //출발역인 경우에 기존의 출발역 정보를 지우고 새로 갱신한다.
                                 if (msg.contains("1")) {
-                                    mTagContainerLayout1.removeTag(0);
-                                    list1.remove(0);
-                                    mTagContainerLayout1.setCrossColor(Color.parseColor("#FE9D0D"));
-                                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE9D0D"));
-                                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE9D0D"));
-                                    mTagContainerLayout1.addTag(isStart[1], 0);    //첫번째 자리에 추가 또는 갱신
-                                    list1.add(0,isStart[1]);                         //첫번째 자리에 추가 또는 갱신
-                                    startOk = true;
+                                    int length = 0;
+                                    int startNumber = 0;
+                                    if(endOk){
+                                        length = list1.size()-1;
+                                    } else{
+                                        length = list1.size();
+                                    }
+                                    if(startOk){
+                                        startNumber = 1;
+                                    } else {
+                                        startNumber = 0;
+                                    }
+                                    for(int i = startNumber; i < length; i++) {
+                                        if(isStart[1].equals(list1.get(i))){
+                                            page3_svg.loadUrl("javascript:deletePin('1')");   //svg 지도에서 경유 아이콘 삭제
+                                            isOk = true;
+                                            break;
+                                        } else{
+                                            isOk =false;
+                                        }
+                                    }
+                                    if(!isOk) {
+                                        if (startOk) {
+                                            mTagContainerLayout1.removeTag(0);
+                                            list1.remove(0);
+                                        }
+                                        mTagContainerLayout1.setCrossColor(Color.parseColor("#FE9D0D"));
+                                        mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE9D0D"));
+                                        mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE9D0D"));
+                                        mTagContainerLayout1.addTag(isStart[1], 0);    //첫번째 자리에 추가 또는 갱신
+                                        list1.add(0, isStart[1]);                         //첫번째 자리에 추가 또는 갱신
+                                        startOk = true;
+                                        break;
+                                    }
+                                    else
+                                        Toast.makeText(getApplicationContext(), "경유역에 동일한 역이 있습니다. \n다른 역을 선택해주세요.", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
 
@@ -879,50 +870,101 @@ public class Page3_Main extends AppCompatActivity implements SharedPreferences.O
                                 //경유역인 경우에, 출발역과 도착역 사이에 계속 추가가 되어야 한다.
                                 else if (msg.contains("2")) {
                                     middleOk = true;
-
-                                    //도착역이 선택 되어있으면, 도착역을 뒤로 밀어준다.
-                                    if(endOk) {
-                                        //도착역의 색상
-                                        mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE800D"));
-                                        mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE800D"));
-
-                                        //도착역을 뒤로 밀고, 기존 도착역을 삭제한다.
-                                        mTagContainerLayout1.addTag(list1.get(list1.size()-1), mTagContainerLayout1.size());
-                                        list1.add(list1.size(), list1.get(list1.size()-1));
-                                        mTagContainerLayout1.removeTag(mTagContainerLayout1.size()-1);
-                                        list1.remove(list1.size()-1);
-
-                                        //경유역을 도착역 앞에 생성한다.
-                                        mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));         // X<-의 색
-                                        mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
-                                        mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
-                                        mTagContainerLayout1.addTag(isStart[1], mTagContainerLayout1.size()-1);
-                                        list1.add(list1.size()-1, isStart[1]);
-                                    } else {
-                                        mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));         // X<-의 색
-                                        mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
-                                        mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
-                                        mTagContainerLayout1.addTag(isStart[1]);
-                                        list1.add(isStart[1]);
+                                    int length = 0;
+                                    int startNumber = 0;
+                                    if(endOk){
+                                        length = list1.size()-1;
+                                    } else{
+                                        length = list1.size();
                                     }
+                                    if(startOk){
+                                        startNumber = 1;
+                                    } else {
+                                        startNumber = 0;
+                                    }
+                                    for(int i = startNumber; i < length; i++) {
+                                        if (isStart[1].equals(list1.get(i))) {
+                                            page3_svg.loadUrl("javascript:deletePin_middle('"+"2_"+list1.get(i)+"')");   //svg 지도에서 경유 아이콘 삭제
+                                            isOk = true;
+                                            break;
+                                        } else {
+                                            isOk = false;
+                                        }
+                                    }
+
+                                    if(!isOk) {
+                                        //도착역이 선택 되어있으면, 도착역을 뒤로 밀어준다.
+                                        if (endOk) {
+                                            //도착역의 색상
+                                            mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE800D"));
+                                            mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE800D"));
+
+                                            //도착역을 뒤로 밀고, 기존 도착역을 삭제한다.
+                                            mTagContainerLayout1.addTag(list1.get(list1.size() - 1), mTagContainerLayout1.size());
+                                            list1.add(list1.size(), list1.get(list1.size() - 1));
+                                            mTagContainerLayout1.removeTag(mTagContainerLayout1.size() - 1);
+                                            list1.remove(list1.size() - 1);
+
+                                            //경유역을 도착역 앞에 생성한다.
+                                            mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));         // X<-의 색
+                                            mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
+                                            mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
+                                            mTagContainerLayout1.addTag(isStart[1], mTagContainerLayout1.size() - 1);
+                                            list1.add(list1.size() - 1, isStart[1]);
+                                        } else {
+                                            mTagContainerLayout1.setCrossColor(Color.parseColor("#1B503D"));         // X<-의 색
+                                            mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#4DD9A9"));
+                                            mTagContainerLayout1.setTagBorderColor(Color.parseColor("#4DD9A9"));
+                                            mTagContainerLayout1.addTag(isStart[1]);
+                                            list1.add(isStart[1]);
+                                        }
+                                        break;
+                                    } else
+                                        Toast.makeText(getApplicationContext(), "동일한 역이 있습니다. \n다른 역을 선택해주세요.", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
 
 
                                 //도착역인 경우에, 항상 뒤에 추가가 된다.
                                 else if (msg.contains("3")) {
-
-                                    //기존의 도착역을 삭제하고 갱신한다.
+                                    int length = 0;
+                                    int startNumber = 0;
                                     if(endOk){
-                                        mTagContainerLayout1.removeTag(mTagContainerLayout1.size()-1);
-                                        list1.remove(list1.size()-1);
+                                        length = list1.size()-1;
+                                    } else{
+                                        length = list1.size();
                                     }
-                                    mTagContainerLayout1.setCrossColor(Color.parseColor("#FE800D"));         // X<-의 색
-                                    mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE800D"));
-                                    mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE800D"));
-                                    mTagContainerLayout1.addTag(isStart[1], mTagContainerLayout1.size());         //항상 뒤에 추가 됨
-                                    list1.add(list1.size(),isStart[1]);                                           //항상 뒤에 추가 됨
-                                    endOk = true;
+                                    if(startOk){
+                                        startNumber = 1;
+                                    } else {
+                                        startNumber = 0;
+                                    }
+                                    for(int i = startNumber; i < length; i++) {
+                                        if (isStart[1].equals(list1.get(i))) {
+                                            page3_svg.loadUrl("javascript:deletePin('3')");   //svg 지도에서 경유 아이콘 삭제
+                                            isOk = true;
+                                            break;
+                                        } else {
+                                            isOk = false;
+                                        }
+                                    }
+
+                                    if(!isOk) {
+                                        //기존의 도착역을 삭제하고 갱신한다.
+                                        if (endOk) {
+                                            mTagContainerLayout1.removeTag(mTagContainerLayout1.size() - 1);
+                                            list1.remove(list1.size() - 1);
+                                        }
+                                        mTagContainerLayout1.setCrossColor(Color.parseColor("#FE800D"));         // X<-의 색
+                                        mTagContainerLayout1.setTagBackgroundColor(Color.parseColor("#FE800D"));
+                                        mTagContainerLayout1.setTagBorderColor(Color.parseColor("#FE800D"));
+                                        mTagContainerLayout1.addTag(isStart[1], mTagContainerLayout1.size());         //항상 뒤에 추가 됨
+                                        list1.add(list1.size(), isStart[1]);                                           //항상 뒤에 추가 됨
+                                        endOk = true;
+                                        break;
+                                    }
+                                    else
+                                        Toast.makeText(getApplicationContext(), "경유역에 동일한 역이 있습니다. \n다른 역을 선택해주세요.", Toast.LENGTH_SHORT).show();
                                     break;
                                 }
                             }

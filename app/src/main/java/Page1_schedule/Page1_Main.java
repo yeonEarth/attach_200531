@@ -612,7 +612,7 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
                 }
             }
         }
-        pagerAdapter = new Page1_pagerAdapter(this, this, arrayLocal, this);
+        pagerAdapter = new Page1_pagerAdapter(this, this, arrayLocal, this, db_key);
         viewPager.setAdapter(pagerAdapter);
         pageIndicatorView.setCount(arrayLocal.size());
 

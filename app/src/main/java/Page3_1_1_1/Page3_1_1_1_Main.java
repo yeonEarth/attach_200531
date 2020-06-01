@@ -539,7 +539,7 @@ public  class Page3_1_1_1_Main extends AppCompatActivity implements SharedPrefer
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddHHmmss");
-                    String formatDate = simpleDateFormat.format(date).trim();
+                    String formatDate = "1"+simpleDateFormat.format(date).trim();
 
                     dbOpenHelper.open();
                     for(int i=0; i < list.size(); i++){

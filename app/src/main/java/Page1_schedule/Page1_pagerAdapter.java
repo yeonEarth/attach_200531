@@ -1,7 +1,9 @@
 package Page1_schedule;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +21,17 @@ import com.example.hansol.spot_200510_hs.R;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Page1_pagerAdapter extends PagerAdapter {
 
+    private String key;
     private Context mContext;
     private String stationName;
     private List<String> localArray;
     private HashMap<String, String> benefit = new HashMap<String, String>();
 
-   //인터페이스
+    //인터페이스
     private send_expand send;
     boolean isExpand = false;
 
@@ -35,11 +40,12 @@ public class Page1_pagerAdapter extends PagerAdapter {
     private boolean First_click= false;
 
 
-    public Page1_pagerAdapter(send_expand send, Context context , List<String> arrayList, Page1_Position page1_position){
+    public Page1_pagerAdapter(send_expand send, Context context , List<String> arrayList, Page1_Position page1_position, String key){
         this.send = send;
         mContext = context;
         localArray = arrayList;
         this.page1_position = page1_position;
+        this.key = key;
     }
 
 
@@ -144,6 +150,19 @@ public class Page1_pagerAdapter extends PagerAdapter {
                 public void onClick (View view){
                     //여행 시작하기 : 위치 권한 + 서비스 사용 요청
                     if(position == 0) {
+                        //처음 버튼 누르면
+                        SharedPreferences a = mContext.getSharedPreferences("viewpager", MODE_PRIVATE);
+                        final SharedPreferences.Editor editor = a.edit();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                editor.putInt(key, 1);
+                                editor.commit();
+                            }
+                        }, 300);
+
+
                         page1_position.onClick_startBtn();
                         checkIn_btn.setText("여행중");
                         checkIn_btn.setSelected(true);
@@ -154,6 +173,20 @@ public class Page1_pagerAdapter extends PagerAdapter {
                     }
                 }
             });
+
+
+            SharedPreferences preferences =mContext.getSharedPreferences("viewpager", MODE_PRIVATE);
+            int firstviewShow = preferences.getInt(key, 0);
+
+            // 누른적이 있으면 여행중 유지지
+            if (firstviewShow == 1 && position==0) {
+                checkIn_btn.setText("여행중");
+                checkIn_btn.setSelected(true);
+                checkIn_btn.setTextColor(Color.parseColor("#FFFEFE"));
+                page1_pager_layout.setBackgroundResource(R.drawable.rectangle4);
+                page1_gift_layout.setBackgroundResource(R.drawable.rectangle4);
+                textView.setTextColor(Color.parseColor("#2D624F"));
+            }
 
 
 
@@ -232,5 +265,6 @@ public class Page1_pagerAdapter extends PagerAdapter {
         benefit.put("신경주" ,"불국사 입장권 (*신경주역,경주역,서경주역,불국사역 발권자 한정)");
         benefit.put("안동" ,"숙박 및 시티투어 할인권");
     }
+
 
 }

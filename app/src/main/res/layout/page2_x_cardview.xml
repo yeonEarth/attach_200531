@@ -17,18 +17,19 @@
 
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             //이미지
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/no_image"
                 android:id="@+id/image"/>
 
             //이미지 그림자
             <ImageView
+                android:id="@+id/shadow"
                 android:layout_width="wrap_content"
                 android:layout_height="156dp"
                 android:background="@drawable/background_shadow"
@@ -40,17 +41,15 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="11dp"
-                android:layout_marginLeft="16dp"
+                android:layout_below="@+id/shadow"
+                android:layout_marginLeft="12dp"
                 android:layout_marginRight="14dp"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
+                android:singleLine="true"
+                android:maxWidth="85dp"
                 android:text="경복궁"
-                android:fontFamily="@font/gothic_bold"
                 android:ellipsize="marquee"
-                android:singleLine="true"/>
+                android:textAppearance="@style/cardview_titleText"
+                android:scaleX="0.98"/>
 
 
             //관광지 타입
@@ -61,12 +60,9 @@
                 android:layout_above="@+id/title"
                 android:layout_marginBottom="1dp"
                 android:layout_marginRight="14dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="12dp"
                 android:text="역사/관광명소"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/gothic_medium"/>
+                android:textAppearance="@style/cardview_subjectText"/>
 
 
             //하트

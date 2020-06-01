@@ -500,6 +500,24 @@ function no_train(){
 }
 
 
+//출발 선택하다가 경유에 같은거 있으면 오류남
+function deletePin(arg)
+{
+	var pin_end = document.getElementById( 'pin_end' );
+    var pin_start = document.getElementById( 'pin_start' );
+
+	if(arg == "1" ){
+		pin_start.setAttribute('opacity' , 0 );
+		pin_start.setAttribute('cx' , 0 );
+    	pin_start.setAttribute('cy' , 0 );
+	} else {
+		pin_end.setAttribute('opacity' , 0 );
+    	pin_end.setAttribute('cx' , 0);
+    	pin_end.setAttribute('cy' , 0 );
+	}
+}
+
+
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -521,10 +539,10 @@ function no_train(){
 	</defs>
 
 	<defs>
-	<style>.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23,.cls-24,.cls-25,.cls-7,.cls-8,.cls-9{fill:none;}.cls-2{isolation:isolate;}.cls-3{fill:#9ad1d9;}.cls-4{clip-path:url(#clip-path);}.cls-5{opacity:0.75;mix-blend-mode:multiply;}.cls-6{fill:#f9f2e6;}.cls-27,.cls-7{stroke:#a7dcc7;}.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23,.cls-24,.cls-25,.cls-26,.cls-27,.cls-28,.cls-29,.cls-30,.cls-31,.cls-32,.cls-33,.cls-34,.cls-35,.cls-36,.cls-37,.cls-38,.cls-39,.cls-40,.cls-41,.cls-42,.cls-43,.cls-44,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;stroke-width:2px;}.cls-38,.cls-8{stroke:#5b9885;}.cls-33,.cls-9{stroke:#8102ff;}.cls-10,.cls-34{stroke:#0050ff;}.cls-11,.cls-28{stroke:#ffb56a;}.cls-12,.cls-26{stroke:#970d0d;}.cls-12{opacity:0.96;}.cls-13,.cls-31{stroke:#ff6969;}.cls-14,.cls-30{stroke:#109993;}.cls-15,.cls-35{stroke:#7d9a92;}.cls-16,.cls-44{stroke:#a29aff;}.cls-17,.cls-29{stroke:#001e8e;}.cls-18,.cls-37{stroke:#ffa7f8;}.cls-19,.cls-36{stroke:#ffd25c;}.cls-20,.cls-40{stroke:#3abf00;}.cls-21,.cls-39{stroke:#960b0b;}.cls-22,.cls-32{stroke:#a2e7fb;}.cls-23,.cls-42{stroke:#44712f;}.cls-24,.cls-41{stroke:#015aff;}.cls-25,.cls-43{stroke:#a7ff77;}.cls-26,.cls-27,.cls-28,.cls-29,.cls-30,.cls-31,.cls-32,.cls-33,.cls-34,.cls-35,.cls-36,.cls-37,.cls-38,.cls-39,.cls-40,.cls-41,.cls-42,.cls-43,.cls-44{fill:#fff;}.cls-45{font-size:10px;font-family:NanumSquare_acB, NanumSquare_ac;}.cls-46{fill:#2b3393;}.cls-47{fill:#dd202c;}.cls-48{fill:#4d2f48;}</style>
+		<style>.cls-1,.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23,.cls-24,.cls-25,.cls-7,.cls-8,.cls-9{fill:none;}.cls-2{isolation:isolate;}.cls-3{fill:#9ad1d9;}.cls-4{clip-path:url(#clip-path);}.cls-5{opacity:0.75;mix-blend-mode:multiply;}.cls-6{fill:#f9f2e6;}.cls-27,.cls-7{stroke:#a7dcc7;}.cls-10,.cls-11,.cls-12,.cls-13,.cls-14,.cls-15,.cls-16,.cls-17,.cls-18,.cls-19,.cls-20,.cls-21,.cls-22,.cls-23,.cls-24,.cls-25,.cls-26,.cls-27,.cls-28,.cls-29,.cls-30,.cls-31,.cls-32,.cls-33,.cls-34,.cls-35,.cls-36,.cls-37,.cls-38,.cls-39,.cls-40,.cls-41,.cls-42,.cls-43,.cls-44,.cls-7,.cls-8,.cls-9{stroke-miterlimit:10;stroke-width:2px;}.cls-38,.cls-8{stroke:#5b9885;}.cls-33,.cls-9{stroke:#8102ff;}.cls-10,.cls-34{stroke:#0050ff;}.cls-11,.cls-28{stroke:#ffb56a;}.cls-12,.cls-26{stroke:#970d0d;}.cls-12{opacity:0.96;}.cls-13,.cls-31{stroke:#ff6969;}.cls-14,.cls-30{stroke:#109993;}.cls-15,.cls-35{stroke:#7d9a92;}.cls-16,.cls-44{stroke:#a29aff;}.cls-17,.cls-29{stroke:#001e8e;}.cls-18,.cls-37{stroke:#ffa7f8;}.cls-19,.cls-36{stroke:#ffd25c;}.cls-20,.cls-40{stroke:#3abf00;}.cls-21,.cls-39{stroke:#960b0b;}.cls-22,.cls-32{stroke:#a2e7fb;}.cls-23,.cls-42{stroke:#44712f;}.cls-24,.cls-41{stroke:#015aff;}.cls-25,.cls-43{stroke:#a7ff77;}.cls-26,.cls-27,.cls-28,.cls-29,.cls-30,.cls-31,.cls-32,.cls-33,.cls-34,.cls-35,.cls-36,.cls-37,.cls-38,.cls-39,.cls-40,.cls-41,.cls-42,.cls-43,.cls-44{fill:#fff;}.cls-45{font-size:10px;font-family:NanumSquare_acB, NanumSquare_ac;}.cls-46{fill:#2b3393;}.cls-47{fill:#dd202c;}.cls-48{fill:#4d2f48;}</style>
 
-	<clipPath id="clip-path" transform="translate(0 33.98)">
-		<rect class="cls-1" width="1072.44" height="1357.19"/></clipPath>
+		<clipPath id="clip-path" transform="translate(0 33.98)">
+			<rect class="cls-1" width="1072.44" height="1357.19"/></clipPath>
 	</defs>
 
 	<title>열차 노선도</title>

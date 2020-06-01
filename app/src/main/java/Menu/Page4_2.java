@@ -3,6 +3,7 @@ package Menu;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -378,6 +379,11 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //뷰페이져 선택된거 삭제
+                SharedPreferences a = getSharedPreferences("viewpager", MODE_PRIVATE);
+                final SharedPreferences.Editor editor = a.edit();
+                editor.remove(key);
+
                 if(key.equals(second_key)){
                     second_mainDBHelper.deleteAllColumns();
                     second_mainDBHelper.close();
@@ -415,17 +421,17 @@ class Train_Data {
 
 
 
-    //데베값 정제한 값 구성
-    class Train_Data_forRecyclerview {
-        String keyDate;
-        String startdate;
-        String enddate;
+//데베값 정제한 값 구성
+class Train_Data_forRecyclerview {
+    String keyDate;
+    String startdate;
+    String enddate;
 
-        public Train_Data_forRecyclerview(String keyDate, String startdate, String enddate) {
-            this.keyDate = keyDate;
-            this.startdate = startdate;
-            this.enddate = enddate;
-        }
+    public Train_Data_forRecyclerview(String keyDate, String startdate, String enddate) {
+        this.keyDate = keyDate;
+        this.startdate = startdate;
+        this.enddate = enddate;
+    }
 
 
 }
