@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
     android:background="@drawable/ic_bg_photospot">
 
     <ScrollView
@@ -84,7 +82,8 @@
                 android:layout_below="@+id/page2_1_1_info_layout"
                 android:layout_marginTop="24dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"/>
         </RelativeLayout>
     </ScrollView>
     <FrameLayout

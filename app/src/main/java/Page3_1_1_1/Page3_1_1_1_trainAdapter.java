@@ -492,7 +492,7 @@ public class Page3_1_1_1_trainAdapter extends RecyclerView.Adapter<RecyclerView.
             URL url = null;
             try{
                 url = new URL("http://openapi.tago.go.kr/openapi/service/TrainInfoService/" +
-                        "getStrtpntAlocFndTrainInfo?serviceKey=7LT0Q7XeCAuzBmGUO7LmOnrkDGK2s7GZIJQdvdZ30lf7FmnTle%2BQoOqRKpjcohP14rouIrtag9KOoCZe%2BXuNxg%3D%3D" +
+                        "getStrtpntAlocFndTrainInfo?serviceKey=Z2ABtX1mu7Z%2FVsuir30gFJ%2BRDlNdWq8ujTgba2ZIu%2BRRiT65hy%2BOVzjmZxFXW04kGY08%2FgNrX7w%2BCexXYOz6Jg%3D%3D" +
                         "&numOfRows=30" +
                         "&pageNo=1&" +
                         "depPlaceId=" + startCode +

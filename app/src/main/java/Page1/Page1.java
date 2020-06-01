@@ -534,7 +534,7 @@ public class Page1 extends AppCompatActivity implements View.OnClickListener, Sh
             cityList.add("울산");
             cityList.add("동해");
             cityPicture.add(R.drawable.ulsan);
-            cityPicture.add(R.drawable.pyeonchang);
+            cityPicture.add(R.drawable.donghae);
         }
 
 

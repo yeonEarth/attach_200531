@@ -1191,9 +1191,9 @@ public class Page1_Main extends AppCompatActivity implements   Page1_pagerAdapte
             completeList.clear();
             getPosition.clear();
 
-            Day_schedule_data(stationWithTransfer.get(gotData-1));
+            Day_schedule_data(stationWithTransfer.get(gotData));
             if (isNetworkConnect != 3) {
-                send_Api(stationWithTransfer.get(gotData-1));
+                send_Api(stationWithTransfer.get(gotData));
             }
             err_message();
             startStation.setText(arrayLocal.get(gotData));
