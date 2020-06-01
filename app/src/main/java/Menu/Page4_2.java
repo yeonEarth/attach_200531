@@ -133,15 +133,8 @@ public class Page4_2 extends AppCompatActivity implements Page4_sendData {
 
         // 리사이클러뷰 설정
         recyclerView = findViewById(R.id.page4_2_recyclerview);
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return 1;
-            }
-        });
         adapter = new Page4_2_adapter(context, train_data_forRecyclerview, this);
         recyclerView.setAdapter(adapter);
 
